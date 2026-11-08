@@ -452,11 +452,12 @@ $('#yr').textContent = new Date().getFullYear();
   const ctx = cv.getContext('2d');
   const sprite = new Image(); sprite.src = 'img/hero/neon-sprite.webp';
   const AR = 368 / 468;
-  const LAYERS = [
-    { n: 0.000045, w: [46, 70],  speed: 0.18, alpha: 0.30, blur: 1.6 },
-    { n: 0.000030, w: [78, 112], speed: 0.38, alpha: 0.55, blur: 0.6 },
-    { n: 0.000012, w: [128, 170], speed: 0.72, alpha: 0.85, blur: 0 }
+  const BASE = [
+    { n: 0.000045, w: [46, 70],  speed: 0.18, alpha: 0.26, blur: 1.6 },
+    { n: 0.000030, w: [78, 112], speed: 0.38, alpha: 0.42, blur: 0.6 },
+    { n: 0.000012, w: [128, 170], speed: 0.72, alpha: 0.62, blur: 0 }
   ];
+  let LAYERS = BASE;
   let W = 0, H = 0, dpr = 1, items = [], bake = [];
   let lastY = scrollY, vel = 0, smoothVel = 0;
   function bakeSprites() {
@@ -473,6 +474,9 @@ $('#yr').textContent = new Date().getFullYear();
   function build() {
     dpr = Math.min(devicePixelRatio || 1, 1.5);
     W = innerWidth; H = innerHeight;
+    // keep the signs "tiny" on phones / narrow windows
+    const k = Math.max(0.5, Math.min(1, W / 1200));
+    LAYERS = BASE.map(L => ({ ...L, w: [L.w[0] * k, L.w[1] * k] }));
     cv.width = W * dpr; cv.height = H * dpr;
     items = [];
     const span = H + 260;
