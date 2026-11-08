@@ -1,0 +1,512 @@
+/* Stellian's — interactive layer */
+(() => {
+'use strict';
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const root = document.documentElement;
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const hero = $('#home');
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+
+/* ================= NAV ================= */
+const nav = $('#nav'), burger = $('#burger'), links = $('#navLinks');
+addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40), { passive: true });
+burger.addEventListener('click', () => {
+  const o = links.classList.toggle('open'); burger.setAttribute('aria-expanded', o);
+});
+$$('a', links).forEach(a => a.addEventListener('click', () => links.classList.remove('open')));
+const navMap = { home: 'home', eight: 'menu', menu: 'menu', shakes: 'menu', videos: 'reviews', gallery: 'gallery', reviews: 'reviews', visit: 'visit' };
+const navObs = new IntersectionObserver(es => es.forEach(e => {
+  if (!e.isIntersecting) return;
+  const id = navMap[e.target.id]; if (!id) return;
+  $$('a', links).forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+}), { rootMargin: '-45% 0px -50% 0px' });
+$$('section[id]').forEach(s => navObs.observe(s));
+
+/* ================= DOLLAR-BILL WALL ================= */
+const wall = $('#wall'), wctx = wall.getContext('2d');
+function rnd(a, b) { return a + Math.random() * (b - a); }
+function drawWall() {
+  const dpr = Math.min(devicePixelRatio || 1, 1.5);
+  const W = hero.clientWidth, H = hero.clientHeight;
+  wall.width = W * dpr; wall.height = H * dpr;
+  const c = wctx; c.setTransform(dpr, 0, 0, dpr, 0, 0);
+  c.fillStyle = '#231d17'; c.fillRect(0, 0, W, H);
+  const bw = 96, bh = 42;
+  c.fillStyle = '#0c0606'; c.fillRect(0, 0, W, H);
+  const inks = ['#1d2a5a', '#111', '#7a1020', '#18451f', '#3a2a66'];
+  for (let y = -10; y < H + 20; y += bh + 3) {
+    const off = rnd(-20, 20);
+    for (let x = -40 + off; x < W + 40; x += bw + 3) {
+      c.save();
+      c.translate(x + rnd(-3, 3), y + rnd(-2, 2));
+      c.rotate(rnd(-0.05, 0.05));
+      const L = rnd(80, 94), Hh = rnd(70, 100);
+      c.fillStyle = `hsl(${Hh} 9% ${L}%)`;
+      c.shadowColor = 'rgba(0,0,0,.6)'; c.shadowBlur = 3; c.shadowOffsetY = 1.5;
+      c.fillRect(-bw / 2, -bh / 2, bw, bh);
+      c.shadowColor = 'transparent';
+      // ornate engraved frame
+      c.strokeStyle = 'rgba(28,40,32,.85)'; c.lineWidth = 2; c.strokeRect(-bw / 2 + 3, -bh / 2 + 3, bw - 6, bh - 6);
+      c.lineWidth = .7; c.strokeRect(-bw / 2 + 6, -bh / 2 + 6, bw - 12, bh - 12);
+      c.fillStyle = 'rgba(28,40,32,.55)';
+      for (let k = 0; k < 3; k++) c.fillRect(-bw / 2 + 9, -bh / 2 + 9 + k * 4, 22, 1.4);
+      for (let k = 0; k < 3; k++) c.fillRect(bw / 2 - 31, bh / 2 - 19 + k * 4, 22, 1.4);
+      // portrait
+      c.fillStyle = 'rgba(30,38,30,.85)';
+      c.beginPath(); c.ellipse(0, 0, 11, 15, 0, 0, 7); c.fill();
+      c.fillStyle = `hsl(${Hh} 8% ${L - 18}%)`;
+      c.beginPath(); c.ellipse(0, -1, 6.5, 9, 0, 0, 7); c.fill();
+      c.fillStyle = 'rgba(30,38,30,.8)'; c.beginPath(); c.ellipse(0, 7, 8, 5, 0, Math.PI, 0, true); c.fill();
+      // seals + corner 1s
+      c.fillStyle = 'rgba(30,90,50,.85)'; c.beginPath(); c.arc(bw / 2 - 24, 2, 5, 0, 7); c.fill();
+      c.fillStyle = 'rgba(20,20,20,.75)'; c.beginPath(); c.arc(-bw / 2 + 24, 2, 4.5, 0, 7); c.fill();
+      c.font = '700 10px Oswald, sans-serif'; c.fillStyle = 'rgba(28,40,32,.9)';
+      c.fillText('1', -bw / 2 + 7, bh / 2 - 6); c.fillText('1', bw / 2 - 12, -bh / 2 + 15);
+      // customer signatures
+      if (Math.random() < .8) {
+        c.strokeStyle = inks[(Math.random() * inks.length) | 0]; c.globalAlpha = rnd(.55, .95);
+        c.lineWidth = rnd(1, 1.8); c.beginPath();
+        let sx = rnd(-bw / 2 + 8, -10), sy = rnd(-12, 12); c.moveTo(sx, sy);
+        for (let k = 0; k < 6; k++) c.quadraticCurveTo(sx + rnd(3, 9), sy + rnd(-8, 8), sx += rnd(6, 12), sy + rnd(-3, 3));
+        c.stroke(); c.globalAlpha = 1;
+      }
+      if (Math.random() < .12) { c.fillStyle = 'rgba(255,250,220,.4)'; c.fillRect(-9, -bh / 2 - 4, 18, 9); }
+      c.fillStyle = `rgba(90,60,20,${rnd(0, .12)})`; c.fillRect(-bw / 2, -bh / 2, bw, bh);
+      c.restore();
+    }
+  }
+  // overall darken + warm grade (lighting comes from overlays)
+  c.globalCompositeOperation = 'multiply';
+  c.fillStyle = '#d29a94'; c.fillRect(0, 0, W, H);
+  const rg = c.createRadialGradient(W * .52, H * .3, 50, W * .52, H * .3, W * .7);
+  rg.addColorStop(0, '#ffffff'); rg.addColorStop(.5, '#b07a74'); rg.addColorStop(1, '#3a2220');
+  c.fillStyle = rg; c.fillRect(0, 0, W, H);
+  c.globalCompositeOperation = 'source-over';
+  const g = c.createLinearGradient(0, 0, 0, H * .3);
+  g.addColorStop(0, 'rgba(0,0,0,.4)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+  c.fillStyle = g; c.fillRect(0, 0, W, H * .3);
+}
+
+/* ================= NEON POWER ================= */
+let neon = 0, target = 1, isOn = false, busy = false;
+const sw = $('#neonSwitch'), hint = $('#switchHint');
+const litG = document.querySelector('#neon .lit'), glassG = document.querySelector('#neon .glass');
+function setNeon(v) {
+  neon = v; root.style.setProperty('--neon', v.toFixed(3));
+  if (litG) litG.setAttribute('opacity', v.toFixed(3));
+  if (glassG) glassG.setAttribute('opacity', (1 - v * .6).toFixed(3));
+}
+setNeon(0);
+
+// --- sound (synthesized, only after the user touches the switch) ---
+let AC = null, master = null;
+function audio() {
+  if (AC) return AC;
+  try { AC = new (window.AudioContext || window.webkitAudioContext)(); master = AC.createGain(); master.gain.value = .55; master.connect(AC.destination); } catch (e) { AC = null; }
+  return AC;
+}
+function noiseBuf(len) {
+  const b = AC.createBuffer(1, AC.sampleRate * len, AC.sampleRate), d = b.getChannelData(0);
+  for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / d.length, 3);
+  return b;
+}
+function click() {
+  if (!audio()) return;
+  const t = AC.currentTime;
+  const n = AC.createBufferSource(); n.buffer = noiseBuf(.05);
+  const f = AC.createBiquadFilter(); f.type = 'bandpass'; f.frequency.value = 2400; f.Q.value = 1.4;
+  const g = AC.createGain(); g.gain.value = .9;
+  n.connect(f).connect(g).connect(master); n.start(t);
+  const o = AC.createOscillator(); o.frequency.setValueAtTime(140, t); o.frequency.exponentialRampToValueAtTime(50, t + .06);
+  const og = AC.createGain(); og.gain.setValueAtTime(.5, t); og.gain.exponentialRampToValueAtTime(.001, t + .08);
+  o.connect(og).connect(master); o.start(t); o.stop(t + .1);
+}
+function crackle(at) {
+  if (!AC) return;
+  const n = AC.createBufferSource(); n.buffer = noiseBuf(.04);
+  const f = AC.createBiquadFilter(); f.type = 'highpass'; f.frequency.value = 3000;
+  const g = AC.createGain(); g.gain.value = .25;
+  n.connect(f).connect(g).connect(master); n.start(AC.currentTime + at / 1000);
+}
+function hum(dur) {
+  if (!AC) return;
+  const t = AC.currentTime;
+  const o = AC.createOscillator(); o.type = 'sawtooth'; o.frequency.value = 120;
+  const o2 = AC.createOscillator(); o2.type = 'square'; o2.frequency.value = 240;
+  const f = AC.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 700;
+  const g = AC.createGain(); g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.06, t + .1); g.gain.exponentialRampToValueAtTime(.0008, t + dur);
+  o.connect(f); o2.connect(f); f.connect(g).connect(master);
+  o.start(t); o2.start(t); o.stop(t + dur); o2.stop(t + dur);
+}
+
+// realistic ignition: tubes strike, stutter, then settle
+const ignite = [[0, .0], [60, .9], [110, .05], [190, .7], [230, 0], [330, .35], [360, .05], [470, 1], [520, .55], [580, 1], [900, .85], [960, 1]];
+function power(on, sound) {
+  if (busy) return;
+  isOn = on; busy = true;
+  sw.setAttribute('aria-pressed', on);
+  document.body.classList.toggle('neon-on', on);
+  if (sound) { click(); }
+  kickCable(on ? -1 : 1);
+  if (reduce) { setNeon(on ? 1 : 0); busy = false; return; }
+  if (on) {
+    if (sound) hum(1.6);
+    const t0 = performance.now();
+    ignite.forEach(([ms, v]) => setTimeout(() => { setNeon(v); if (sound && v > .5) crackle(0); }, ms));
+    setTimeout(() => { busy = false; }, 1000);
+  } else {
+    // power cut: instant drop, faint afterglow in the core
+    setNeon(.18); setTimeout(() => setNeon(.06), 60); setTimeout(() => { setNeon(0); busy = false; }, 220);
+  }
+}
+sw.addEventListener('click', () => {
+  hint.classList.add('gone');
+  power(!isOn, true);
+});
+// idle "aging tube" micro flicker while on
+setInterval(() => {
+  if (!isOn || busy || reduce) return;
+  if (Math.random() < .25) { setNeon(.82); setTimeout(() => setNeon(1), 70); }
+}, 2600);
+
+/* ================= CABLE (verlet rope) ================= */
+const cv = $('#cable'), cx = cv.getContext('2d');
+const transformer = $('#transformer'), plate = $('.plate', sw);
+let pts = [], A = { x: 0, y: 0 }, B = { x: 0, y: 0 }, seg = 10, N = 34, dpr = 1;
+const ptr = { x: -999, y: -999, vx: 0, vy: 0, inside: false };
+function anchors() {
+  const h = hero.getBoundingClientRect();
+  const t = transformer.getBoundingClientRect(), p = plate.getBoundingClientRect();
+  A = { x: t.left - h.left + t.width * .5, y: t.bottom - h.top - 2 };
+  B = { x: p.left - h.left + p.width * .5, y: p.top - h.top + 3 };
+  return h;
+}
+function buildRope() {
+  const h = anchors();
+  dpr = Math.min(devicePixelRatio || 1, 2);
+  cv.width = h.width * dpr; cv.height = h.height * dpr;
+  const dist = Math.hypot(B.x - A.x, B.y - A.y);
+  const len = dist * 1.18 + 90;
+  seg = len / (N - 1);
+  pts = [];
+  for (let i = 0; i < N; i++) {
+    const t = i / (N - 1);
+    const x = A.x + (B.x - A.x) * t, y = A.y + (B.y - A.y) * t + Math.sin(t * Math.PI) * 60;
+    pts.push({ x, y, ox: x, oy: y });
+  }
+}
+function kickCable(dir) {
+  for (let i = N - 8; i < N - 1; i++) { pts[i] && (pts[i].oy += dir * 6 * (i - N + 9) / 8, pts[i].ox += 4); }
+}
+function stepRope() {
+  const g = 0.5, damp = 0.985;
+  for (let i = 1; i < N - 1; i++) {
+    const p = pts[i];
+    const vx = (p.x - p.ox) * damp, vy = (p.y - p.oy) * damp;
+    p.ox = p.x; p.oy = p.y;
+    p.x += vx; p.y += vy + g;
+    // pointer pushes the cable
+    if (ptr.inside) {
+      const dx = p.x - ptr.x, dy = p.y - ptr.y, d = Math.hypot(dx, dy);
+      if (d < 34 && d > .01) { const f = (34 - d) / 34; p.x += dx / d * f * 6 + ptr.vx * .25 * f; p.y += dy / d * f * 6 + ptr.vy * .25 * f; }
+    }
+  }
+  pts[0].x = A.x; pts[0].y = A.y; pts[N - 1].x = B.x; pts[N - 1].y = B.y;
+  for (let k = 0; k < 18; k++) {
+    for (let i = 0; i < N - 1; i++) {
+      const a = pts[i], b = pts[i + 1];
+      const dx = b.x - a.x, dy = b.y - a.y, d = Math.hypot(dx, dy) || .001, diff = (d - seg) / d * .5;
+      const ox = dx * diff, oy = dy * diff;
+      if (i !== 0) { a.x += ox; a.y += oy; }
+      if (i + 1 !== N - 1) { b.x -= ox; b.y -= oy; }
+    }
+  }
+}
+function pathRope(ox = 0, oy = 0) {
+  cx.beginPath(); cx.moveTo(pts[0].x + ox, pts[0].y + oy);
+  for (let i = 1; i < N - 1; i++) {
+    const mx = (pts[i].x + pts[i + 1].x) / 2, my = (pts[i].y + pts[i + 1].y) / 2;
+    cx.quadraticCurveTo(pts[i].x + ox, pts[i].y + oy, mx + ox, my + oy);
+  }
+  cx.lineTo(pts[N - 1].x + ox, pts[N - 1].y + oy);
+}
+function drawRope() {
+  cx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  cx.clearRect(0, 0, cv.width, cv.height);
+  cx.lineCap = 'round'; cx.lineJoin = 'round';
+  // shadow cast on the wall
+  cx.save(); cx.filter = 'blur(5px)'; cx.strokeStyle = 'rgba(0,0,0,.55)'; cx.lineWidth = 8; pathRope(9, 14); cx.stroke(); cx.restore();
+  // rubber jacket
+  cx.strokeStyle = '#0c0c0d'; cx.lineWidth = 7; pathRope(); cx.stroke();
+  cx.strokeStyle = '#1d1d20'; cx.lineWidth = 4.5; pathRope(); cx.stroke();
+  // specular + red neon reflection
+  cx.strokeStyle = 'rgba(255,255,255,.22)'; cx.lineWidth = 1.3; pathRope(-1, -1.8); cx.stroke();
+  cx.strokeStyle = `rgba(255,40,55,${(.55 * neon).toFixed(3)})`; cx.lineWidth = 1.6; pathRope(-.6, -2.2); cx.stroke();
+  // strain-relief collars
+  [pts[0], pts[N - 1]].forEach(p => { cx.fillStyle = '#2c2d31'; cx.beginPath(); cx.arc(p.x, p.y, 6, 0, 7); cx.fill(); cx.fillStyle = '#8b8f96'; cx.beginPath(); cx.arc(p.x - 1.5, p.y - 1.5, 2, 0, 7); cx.fill(); });
+}
+
+/* ================= PARALLAX + REACTIVE FOOD ================= */
+const layers = $$('.layer', hero).map(el => ({ el, d: parseFloat(el.dataset.depth || 0), tilt: el.hasAttribute('data-tilt'), img: $('img', el), glare: $('.glare', el), seed: Math.random() * 10 }));
+let mx = 0, my = 0, tmx = 0, tmy = 0;
+hero.addEventListener('pointermove', e => {
+  const r = hero.getBoundingClientRect();
+  tmx = (e.clientX - r.left) / r.width * 2 - 1; tmy = (e.clientY - r.top) / r.height * 2 - 1;
+  const x = e.clientX - r.left, y = e.clientY - r.top;
+  if (!ptr.inside) { ptr.x = x; ptr.y = y; }
+  ptr.vx = clamp(x - ptr.x, -30, 30); ptr.vy = clamp(y - ptr.y, -30, 30); ptr.x = x; ptr.y = y; ptr.inside = true;
+});
+hero.addEventListener('pointerleave', () => { tmx = 0; tmy = 0; ptr.inside = false; });
+// phone: tilt with the device
+addEventListener('deviceorientation', e => {
+  if (e.gamma == null) return; tmx = clamp(e.gamma / 30, -1, 1); tmy = clamp((e.beta - 45) / 30, -1, 1);
+}, { passive: true });
+
+let heroVisible = true;
+new IntersectionObserver(([e]) => heroVisible = e.isIntersecting).observe(hero);
+let last = performance.now();
+function frame(now) {
+  requestAnimationFrame(frame);
+  if (!heroVisible) return;
+  const t = now / 1000; last = now;
+  mx += (tmx - mx) * .07; my += (tmy - my) * .07;
+  for (const L of layers) {
+    let tf = `translate3d(${(-mx * L.d * 22).toFixed(2)}px,${(-my * L.d * 14).toFixed(2)}px,0)`;
+    if (L.tilt && !reduce) {
+      const bob = Math.sin(t * 1.3 + L.seed) * 5;
+      const ry = mx * 16 + Math.sin(t * .7 + L.seed) * 3, rx = -my * 10;
+      tf += ` translateY(${bob.toFixed(2)}px) rotateY(${ry.toFixed(2)}deg) rotateX(${rx.toFixed(2)}deg)`;
+      if (L.glare) L.glare.style.setProperty('--gx', (50 + mx * 60 + Math.sin(t * .5 + L.seed) * 15).toFixed(1) + '%');
+    }
+    L.el.style.transform = tf;
+  }
+  if (pts.length) { anchors(); if (!reduce) stepRope(); drawRope(); }
+}
+
+/* ================= MENU DATA (from Stellian's published menu) ================= */
+const P = 'img/';
+const SPEC = ['10.59', '14.59', '18.59'];
+const MENU = [
+  { id: 'eight', tab: '8LB Pizza', title: "The Stellian's Special", sub: 'Brick-oven Chicago-style stuffed crust — the pizza that brings everyone to town.', img: P + 'pizza-8lb-cut.jpg', cap: '8 pounds of pizza', items: [
+    { n: "The Stellian's Special", d: 'Crust, toppings, cheese — then another crust with sauce and more cheese. Could weigh up to 8 lbs!', p: '27.99', img: P + 'pizza-8lb-cut.jpg', cap: 'Cut open' },
+    { n: '8LB Meat Lovers', d: 'Ham, sausage, beef & pepperoni stuffed between two crusts. House pick for max weight.', p: '27.99', img: P + 'pizza-8lb.jpg', cap: 'Fresh from the oven' },
+    { n: '8LB The Works', d: 'Pepperoni, Italian sausage, beef, onions, bell peppers, mushrooms, black olives & banana peppers.', p: '27.99', img: P + 'pizza-8lb.jpg', cap: 'The Works' },
+    { n: '8 Pound Chowdown Challenge', d: 'Whole Special + a Freak Shake in 40 minutes = meal on the house and the t-shirt.', p: 'FREE*', img: P + 'pizza-8lb-cut.jpg', cap: 'Think you can?' }
+  ]},
+  { id: 'pizza', tab: 'Pizzas', title: 'Specialty Pizzas', sub: 'Every specialty, three sizes. Cauliflower crust available on mediums.', sizes: true, img: P + 'meat-lovers.jpg', cap: 'Meat Lovers', items: [
+    { n: 'Meat Lovers', d: 'Ham, sausage, beef, pepperoni and mozzarella.', p: SPEC, img: P + 'meat-lovers.jpg', cap: 'Meat Lovers' },
+    { n: 'The Works', d: 'Pepperoni, Italian sausage, beef, onions, bell peppers, mushrooms, black olives, banana peppers, mozzarella.', p: SPEC },
+    { n: 'Hawaiian Delight', d: 'Ham, pineapple, bacon and mozzarella.', p: SPEC },
+    { n: 'Bacon Cheeseburger', d: 'Bacon, shredded cheese, beef, ketchup, mustard and pickle.', p: SPEC },
+    { n: 'White Pizza', d: 'Housemade Alfredo, grilled chicken, mushrooms, bacon and mozzarella.', p: SPEC },
+    { n: 'BBQ Chicken', d: 'Grilled chicken, mozzarella, chopped red onion and BBQ sauce.', p: SPEC },
+    { n: 'Buffalo Chicken', d: 'Grilled chicken, onions, cheddar and housemade buffalo sauce.', p: SPEC },
+    { n: 'Taco Pizza', d: 'Seasoned beef, shredded cheese, lettuce, tomato, black olives — salsa & sour cream on the side.', p: SPEC },
+    { n: 'Vegetarian', d: 'Bell peppers, onions, mushrooms, black olives, tomatoes and mozzarella.', p: SPEC },
+    { n: 'Build Your Own', d: 'Cheese pizza + your toppings: pepperoni, beef, Italian sausage, bacon, ham, onion, banana peppers, mushrooms, olives, pineapple, bell peppers, jalapeños.', p: ['7.49', '9.49', '10.49'], img: P + 'pizza-togo.jpg', cap: 'Carry-out ready' }
+  ]},
+  { id: 'start', tab: 'Starters', title: 'Starters', sub: 'Made to share. Or not.', img: P + 'mozzi-bread.jpg', cap: 'Mozzi Bread', items: [
+    { n: 'Mozzi Bread', d: 'The cheesy legend — order it every time.', p: '8.99', img: P + 'mozzi-bread.jpg', cap: 'Mozzi Bread' },
+    { n: 'Batter-Fried Mushrooms', d: 'Golden and about the size of baseballs.', p: '9.49' },
+    { n: 'Spinach & Artichoke Dip', d: 'Hot, creamy, scoopable.', p: '9.49' },
+    { n: 'Fried Pickles or Pepperoncini Rings', d: 'Crispy, tangy, with dipping sauce.', p: '7.49', img: P + 'fried-pepperoncini.jpg', cap: 'Fried Pepperoncini' },
+    { n: 'Breadsticks', d: 'Warm, buttery, with house sauce.', p: '7.49' },
+    { n: 'Hawg Skins', d: 'Super puffy, super crispy.', p: '8.49' },
+    { n: 'Totchos', d: 'Tater tots loaded nacho-style.', p: '9.99' },
+    { n: 'Meatballs', d: 'Homemade with a little red-pepper kick.', p: '9.99' }
+  ]},
+  { id: 'wings', tab: 'Wings', title: 'Wings by the Pound', sub: 'Bone-in or boneless, tossed in your sauce.', heat: true, img: P + 'interior.jpg', cap: 'Game day at Stellian\'s', items: [
+    { n: 'Bone-In · 1 lb', d: 'Classic wings, one sauce.', p: '11.99' },
+    { n: 'Bone-In · 2 lb', d: 'Two sauces, double the napkins.', p: '21.99' },
+    { n: 'Boneless · 1 lb', d: 'All meat, no work.', p: '12.59' },
+    { n: 'Boneless · 2 lb', d: 'Feeds the table.', p: '22.59' }
+  ]},
+  { id: 'pasta', tab: 'Pasta & Salads', title: 'Pasta & Salads', sub: 'Italian comfort, Kentucky portions.', img: P + 'interior.jpg', cap: 'Pull up a chair', items: [
+    { n: 'Chicken Pasta Alfredo', d: 'Housemade Alfredo, grilled chicken.', p: '12.99' },
+    { n: 'Spaghetti & Meatballs', d: 'Homemade meatballs, red sauce.', p: '11.99' },
+    { n: 'Baked Lasagna', d: 'Layered, baked, bubbling.', p: '11.49' },
+    { n: 'Calzone', d: '$1 per extra topping.', p: '9.99' },
+    { n: 'Jumbo Ravioli', d: 'Big pillows, big sauce.', p: '10.99' },
+    { n: 'Chicken Salad', d: 'Grilled or fried chicken on greens, tomatoes, green peppers, onions, cheddar.', p: '11.49' },
+    { n: 'Clubhouse Salad', d: 'Ham, turkey, bacon, onions, bell & banana peppers, tomatoes, black olives, mushrooms.', p: '11.49' },
+    { n: 'Side Salad', d: 'Dressings: Stellian\'s House poppy-seed vinaigrette, Ranch, Honey Mustard, Bleu Cheese, Thousand Island, Italian, French.', p: '3.49' }
+  ]},
+  { id: 'sand', tab: 'Sandwiches', title: 'Sandwich Combos', sub: 'All sandwiches and baskets served with fries.', img: P + 'storefront.jpg', cap: '116 E Broad St', items: [
+    { n: 'Italian Stellian', d: 'Italian beef, mozzarella, roasted bell peppers & onions, au jus.', p: '11.99' },
+    { n: 'Meatball Grinder', d: 'Meatballs in spaghetti sauce with mozzarella.', p: '11.99' },
+    { n: 'Chicken Parmesan', d: 'Two breaded tenders, house pizza sauce, melted provolone.', p: '11.99' },
+    { n: 'Italian Combo', d: 'Sausage, ham, pepperoni, onion, mozzarella, bell pepper, Italian dressing.', p: '11.49' },
+    { n: 'Stromboli', d: 'House pizza sauce, sausage, pepperoni, cheese, bell pepper, onion.', p: '11.49' },
+    { n: 'The Stellian Club', d: 'Hot ham, turkey, bacon, lettuce, tomato, cheddar, mayo.', p: '10.99' },
+    { n: 'Turkey Grinder', d: 'Turkey, bacon, lettuce, tomato, mozzarella, mayo.', p: '10.99' },
+    { n: 'Hamburger Basket', d: 'Lettuce, tomato, pickle & onion. Add cheese.', p: '10.49' },
+    { n: 'Pizza Burger Basket', d: 'Pepperoni, mozzarella and house pizza sauce.', p: '10.49' }
+  ]},
+  { id: 'shake', tab: 'Freak Shakes', title: 'Freak Shakes & Monster Sundaes', sub: 'Over-the-top, hand-built, made for the camera.', img: P + 'shake-strawberry-cheesecake.jpg', cap: 'Strawberry Cheesecake', items: [
+    { n: 'Strawberry Cheesecake', d: 'Whipped cream mountain, graham rim, strawberry drizzle.', p: '9.99', img: P + 'shake-strawberry-cheesecake.jpg', cap: 'Strawberry Cheesecake' },
+    { n: 'Chocolate Overload', d: 'Chocolate on chocolate on chocolate.', p: '9.99', img: P + 'shakes-chocolate.jpg', cap: 'Chocolate Overload' },
+    { n: "Peanut Butter S'more", d: 'Peanut butter, graham, toasted marshmallow vibes.', p: '9.99', img: P + 'shakes-chocolate.jpg', cap: "PB S'more" },
+    { n: 'Cookies-n-Cream', d: 'Cookie crumble everything.', p: '9.99' },
+    { n: 'Seasonal Shake', d: 'Ask your server what\'s loaded on top this season.', p: '9.99', img: P + 'shake-sprinkles.jpg', cap: 'Seasonal special' },
+    { n: 'Chocolate Sundae', d: 'Monster-sized.', p: '11' },
+    { n: 'Strawberry Sundae', d: 'Monster-sized.', p: '11' }
+  ]},
+  { id: 'kids', tab: 'Kids', title: 'Kids Menu', sub: 'For kids 10 and under.', img: P + 'pizza-togo.jpg', cap: 'Little cheese pizza', items: [
+    { n: "Child's Cheese Pizza", d: 'Extra toppings available.', p: 'ASK' },
+    { n: 'Chicken Tender Basket', d: 'One tender and fries.', p: '4.99' },
+    { n: "Child's Spaghetti", d: 'Just like the grown-up one.', p: '4.99' }
+  ]}
+];
+const SAUCES = [['House Sauce', 1], ['Sweet BBQ', 1], ['Honey BBQ', 1], ['Caribbean Jerk', 2], ['Sweet Heat', 2], ['Buffalo', 3], ['Mango Habanero', 4], ['Extra Hot Buffalo', 4], ['Ghost Pepper', 5]];
+
+const tabs = $('#tabs'), board = $('#board'), list = $('#boardList'), card = $('#photoCard'), pimg = $('#photoImg'), pcap = $('#photoCap'), extra = $('#photoExtra');
+let cur = null, swapT = null;
+MENU.forEach((c, i) => {
+  const b = document.createElement('button'); b.className = 'tab'; b.role = 'tab'; b.textContent = c.tab;
+  b.setAttribute('aria-selected', i === 0); b.addEventListener('click', () => openCat(c, true));
+  c.btn = b; tabs.appendChild(b);
+});
+const price = p => Array.isArray(p) ? `<span class="pr multi">${p.map(x => `<span class="pbox">${x}</span>`).join('')}</span>` : `<span class="pr"><span class="pbox">${p}</span></span>`;
+function renderCat(c) {
+  list.innerHTML = `<h3 class="cat-title">${c.title}</h3><p class="cat-sub">${c.sub}</p>` +
+    (c.sizes ? `<div class="size-row"><span>SMALL</span>·<span>MEDIUM</span>·<span>LARGE</span></div>` : '') +
+    `<ul class="items">${c.items.map((it, k) => `<li class="item" data-k="${k}"><span class="nm">${it.n}${it.img ? '<i class="cam">PHOTO</i>' : ''}</span><span class="ds">${it.d}</span>${price(it.p)}</li>`).join('')}</ul>`;
+  extra.innerHTML = c.heat ? `<p class="cat-sub" style="margin:0">Sauces · mild → wild</p><div class="heat">${SAUCES.map(([s, h]) => `<div><span>${s}</span><b style="width:${h * 20}%"></b></div>`).join('')}</div>` : '';
+  showPhoto(c.img, c.cap, true);
+  $$('.item', list).forEach(li => {
+    const it = c.items[li.dataset.k];
+    const on = () => { $$('.item.hot', list).forEach(x => x.classList.remove('hot')); li.classList.add('hot'); if (it.img) showPhoto(it.img, it.cap); };
+    li.addEventListener('pointerenter', on); li.addEventListener('click', on);
+  });
+}
+function showPhoto(src, cap, instant) {
+  if (pimg.getAttribute('src') === src && pcap.textContent === cap) return;
+  clearTimeout(swapT);
+  if (instant) { pimg.src = src; pcap.textContent = cap; pimg.alt = cap; return; }
+  card.classList.add('swap');
+  swapT = setTimeout(() => { pimg.src = src; pcap.textContent = cap; pimg.alt = cap; card.classList.remove('swap'); }, 260);
+}
+function openCat(c, anim) {
+  if (c === cur) return; cur = c;
+  MENU.forEach(m => m.btn.setAttribute('aria-selected', m === c));
+  if (!anim || reduce) return renderCat(c);
+  board.classList.add('flip-out');
+  setTimeout(() => {
+    renderCat(c);
+    board.classList.remove('flip-out'); board.classList.add('flip-in');
+    void board.offsetWidth;
+    board.classList.remove('flip-in');
+  }, 320);
+}
+openCat(MENU[0], false);
+const stage = $('#boardStage');
+stage.addEventListener('pointermove', e => {
+  const r = stage.getBoundingClientRect();
+  board.style.setProperty('--bx', ((e.clientX - r.left) / r.width * 2 - 1).toFixed(3));
+  board.style.setProperty('--by', ((e.clientY - r.top) / r.height * 2 - 1).toFixed(3));
+});
+stage.addEventListener('pointerleave', () => { board.style.setProperty('--bx', 0); board.style.setProperty('--by', 0); });
+
+/* ================= 8LB photo tilt ================= */
+$$('[data-tilt-card]').forEach(el => {
+  const img = $('img', el);
+  el.addEventListener('pointermove', e => {
+    const r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+    img.style.transform = `rotateY(${x * 18}deg) rotateX(${-y * 14}deg) scale(1.03)`;
+  });
+  el.addEventListener('pointerleave', () => img.style.transform = '');
+});
+
+/* ================= FREAK SHAKE COVERFLOW ================= */
+const SHAKES = [
+  { src: 'img/cut/shake-strawberry.webp', n: 'Strawberry Cheesecake', d: 'A fan favorite — whipped cream, graham rim, strawberry everything.', p: '9.99' },
+  { src: 'img/cut/shake-birthday.webp', n: 'Seasonal Freak Shake', d: 'Brownies, candy, sprinkles — ask your server what\'s on top this season.', p: '9.99' },
+  { src: 'img/shakes-chocolate.jpg', n: "Chocolate Overload & PB S'more", d: 'Bring a friend. Or don\'t.', p: '9.99', photo: true },
+  { src: 'img/shake-sprinkles.jpg', n: 'Built at the Table', d: 'Every Freak Shake is hand-stacked to order.', p: '9.99', photo: true },
+  { src: 'img/shake-strawberry-cheesecake.jpg', n: 'Pairs with Pizza', d: 'The Chowdown Challenge includes one — finish both in 40 minutes.', p: '9.99', photo: true }
+];
+const track = $('#flowTrack'), finfo = $('#flowInfo');
+let fi = 0, fTimer;
+const fcards = SHAKES.map((s, i) => {
+  const d = document.createElement('div'); d.className = 'fcard' + (s.photo ? ' photo' : '');
+  d.innerHTML = `<img src="${s.src}" alt="${s.n}" loading="lazy" ${s.wide ? 'style="max-width:none;max-height:70%"' : ''}>`;
+  d.addEventListener('click', () => { if (i !== fi) { fi = i; layoutFlow(); } });
+  track.appendChild(d); return d;
+});
+function layoutFlow() {
+  const n = SHAKES.length, w = Math.min(innerWidth * .26, 340);
+  fcards.forEach((c, i) => {
+    let o = i - fi; if (o > n / 2) o -= n; if (o < -n / 2) o += n;
+    const a = Math.abs(o);
+    c.style.transform = `translateX(${o * w * 1.02}px) translateZ(${-a * 260}px) rotateY(${-o * 30}deg)`;
+    c.style.zIndex = 10 - a; c.style.opacity = a > 2 ? 0 : 1; c.style.filter = `brightness(${1 - a * .3})`;
+  });
+  const s = SHAKES[fi];
+  finfo.innerHTML = `<h3>${s.n}</h3><p>${s.d}</p><span class="pbox">$${s.p}</span>`;
+}
+const go = d => { fi = (fi + d + SHAKES.length) % SHAKES.length; layoutFlow(); };
+$('#flowPrev').addEventListener('click', () => go(-1));
+$('#flowNext').addEventListener('click', () => go(1));
+let dx0 = null;
+$('#flow').addEventListener('pointerdown', e => dx0 = e.clientX);
+addEventListener('pointerup', e => { if (dx0 == null) return; const d = e.clientX - dx0; dx0 = null; if (Math.abs(d) > 50) go(d < 0 ? 1 : -1); });
+const autoFlow = () => { clearInterval(fTimer); if (!reduce) fTimer = setInterval(() => go(1), 4800); };
+$('#flow').addEventListener('pointerenter', () => clearInterval(fTimer));
+$('#flow').addEventListener('pointerleave', autoFlow);
+layoutFlow(); autoFlow();
+addEventListener('resize', layoutFlow);
+
+/* ================= VIDEOS ================= */
+$$('.video').forEach(v => v.addEventListener('click', () => {
+  v.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${v.dataset.yt}?autoplay=1&rel=0" title="Stellian's video" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`;
+}, { once: true }));
+
+/* ================= GALLERY + LIGHTBOX ================= */
+const GAL = [
+  ['pizza-8lb-cut.jpg', 'The 8LB, cut open'], ['shakes-chocolate.jpg', 'Freak Shakes'], ['interior.jpg', 'The dollar-bill room'],
+  ['meat-lovers.jpg', 'Meat Lovers'], ['shake-strawberry-cheesecake.jpg', 'Strawberry Cheesecake'], ['mozzi-bread.jpg', 'Mozzi Bread'],
+  ['pizza-8lb.jpg', 'Stuffed crust'], ['fried-pepperoncini.jpg', 'Fried Pepperoncini'], ['shake-sprinkles.jpg', 'Seasonal Shake'],
+  ['pizza-togo.jpg', 'Carry-out'], ['storefront.jpg', 'Downtown Central City']
+];
+const mas = $('#masonry');
+GAL.forEach(([f, c]) => { const d = document.createElement('figure'); d.className = 'gitem reveal'; d.innerHTML = `<img src="img/${f}" alt="${c}" loading="lazy"><span>${c}</span>`; mas.appendChild(d); });
+const strip = $('#strip');
+for (let i = 1; i <= 7; i++) { const im = new Image(); im.src = `img/menu-scan-${i}.jpg`; im.alt = `Stellian's printed menu page ${i}`; im.loading = 'lazy'; strip.appendChild(im); }
+const lb = $('#lightbox'), lbImg = $('#lbImg');
+document.addEventListener('click', e => {
+  const im = e.target.closest('.gitem img, .gitem, .strip img'); if (!im) return;
+  const src = (im.tagName === 'IMG' ? im : $('img', im)).src;
+  lbImg.src = src; lb.hidden = false;
+});
+lb.addEventListener('click', e => { if (e.target !== lbImg) lb.hidden = true; });
+addEventListener('keydown', e => { if (e.key === 'Escape') lb.hidden = true; });
+
+/* ================= REVEAL ================= */
+const rv = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); rv.unobserve(e.target); } }), { threshold: .12 });
+$$('.reveal').forEach(el => rv.observe(el));
+
+/* ================= OPEN NOW (Central Time) ================= */
+(function hours() {
+  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-US', { timeZone: 'America/Chicago', weekday: 'short', hour: 'numeric', minute: 'numeric', hour12: false }).formatToParts(new Date()).map(p => [p.type, p.value]));
+  const day = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].indexOf(parts.weekday);
+  const mins = (+parts.hour % 24) * 60 + +parts.minute;
+  const close = (day === 5 || day === 6) ? 22 * 60 : 21 * 60;
+  const open = mins >= 11 * 60 && mins < close;
+  const el = $('#openNow'); el.classList.add(open ? 'open' : 'closed');
+  $('span', el).textContent = open ? `Open now · until ${close / 60 - 12} PM` : 'Closed now · opens 11 AM';
+  const row = $(`#hours tr[data-d="${day}"]`); row && row.classList.add('today');
+  setTimeout(hours, 60000);
+})();
+$('#yr').textContent = new Date().getFullYear();
+
+/* ================= BOOT ================= */
+function layout() { drawWall(); buildRope(); }
+let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(layout, 150); });
+(document.fonts ? document.fonts.ready : Promise.resolve()).then(() => {
+  layout();
+  requestAnimationFrame(frame);
+  // the sign strikes itself on when the page opens
+  setTimeout(() => power(true, false), 450);
+});
+})();

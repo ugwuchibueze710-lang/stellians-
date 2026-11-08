@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Stellian's — Home of the 8LB Pizza | Central City, KY</title>
+<meta name="description" content="Stellian's in downtown Central City, Kentucky — home of the 8LB Chicago-style stuffed crust pizza, Mozzi Bread and over-the-top Freak Shakes. 116 E Broad St · (270) 757-1622.">
+<meta name="theme-color" content="#0b0507">
+<meta property="og:title" content="Stellian's — Home of the 8LB Pizza">
+<meta property="og:description" content="8LB Chicago-style stuffed crust pizza, Mozzi Bread & Freak Shakes in Central City, KY.">
+<meta property="og:image" content="img/pizza-8lb-cut.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Yellowtail&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Restaurant","name":"Stellian's","servesCuisine":["Pizza","Italian","American"],"telephone":"+1-270-757-1622","priceRange":"$","address":{"@type":"PostalAddress","streetAddress":"116 E Broad St","addressLocality":"Central City","addressRegion":"KY","postalCode":"42330","addressCountry":"US"},"geo":{"@type":"GeoCoordinates","latitude":37.2934273,"longitude":-87.1239344},"openingHours":["Mo-Th 11:00-21:00","Su 11:00-21:00","Fr-Sa 11:00-22:00"],"sameAs":["https://www.facebook.com/stellianspizzeria"]}
+</script>
+</head>
+<body class="neon-on">
+
+<!-- ================= NAV ================= -->
+<header class="nav" id="nav">
+  <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  <nav class="nav-links" id="navLinks">
+    <a href="#home" class="active"><svg viewBox="0 0 24 24"><path d="M3 11 12 3l9 8v10h-6v-6H9v6H3z"/></svg>Home</a>
+    <a href="#menu"><svg viewBox="0 0 24 24"><path d="M2 5c6-3 14-3 20 0L12 22z" /><circle cx="9" cy="9" r="1.6" fill="#0b0507"/><circle cx="14" cy="8" r="1.6" fill="#0b0507"/><circle cx="12" cy="13" r="1.6" fill="#0b0507"/></svg>Menu</a>
+    <a href="#visit"><svg viewBox="0 0 24 24"><path d="M4 5h16v16H4zM4 9h16M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-width="2"/></svg>Visit Us</a>
+    <a href="#reviews"><svg viewBox="0 0 24 24"><path d="m12 2 3 7 7 .6-5.3 4.7L18.3 22 12 18l-6.3 4 1.6-7.7L2 9.6 9 9z"/></svg>Reviews</a>
+    <a href="#gallery"><svg viewBox="0 0 24 24"><path d="M3 4h18v16H3z" fill="none" stroke="currentColor" stroke-width="2"/><path d="m5 18 5-6 3 4 2-2 4 4z"/><circle cx="16" cy="8" r="2"/></svg>Gallery</a>
+    <a href="#contact"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>Contact</a>
+  </nav>
+  <a class="order-btn" href="tel:+12707571622" title="Call (270) 757-1622 to order"><svg viewBox="0 0 32 24" style="width:1.5em"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="18" r="3.5"/><circle cx="25" cy="18" r="3.5"/><path d="M10.5 18h9l3-7h-6l-2 4H8M22.5 11l-2-5h-3M3 9h9v6H3z"/></g></svg>Order Online</a>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="home">
+  <canvas id="wall" class="wall" aria-hidden="true"></canvas>
+  <div class="ambient" aria-hidden="true"></div>
+  <div class="pendants" aria-hidden="true"><i></i><i></i><i></i></div>
+  <div class="fan" aria-hidden="true">
+    <div class="fan-rod"></div>
+    <div class="fan-blades"><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="fan-hub"></div>
+    <div class="fan-lights"><b></b><b></b><b></b></div>
+  </div>
+  <div class="fan fan2" aria-hidden="true">
+    <div class="fan-rod"></div>
+    <div class="fan-blades"><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="fan-hub"></div>
+    <div class="fan-lights"><b></b><b></b><b></b></div>
+  </div>
+  <div class="blue-sign" aria-hidden="true"><span>OPEN</span></div>
+  <div class="spill" aria-hidden="true"></div>
+
+  <!-- doorway into the real dining room -->
+  <div class="doorway layer" data-depth="0.25" aria-hidden="true">
+    <div class="doorway-photo"></div>
+  </div>
+
+  <!-- EAT PIZZA mini neon (always lit) -->
+  <div class="eat-sign layer" data-depth="0.35" aria-hidden="true">
+    <span class="eat">EAT</span><span class="pz">PIZZA</span>
+  </div>
+
+  <!-- MAIN NEON SIGN -->
+  <div class="sign-wrap layer" data-depth="0.5" id="signWrap">
+    <svg class="neon" id="neon" viewBox="0 0 900 530" role="img" aria-label="Stellian's — Home of the 8LB Pizza neon sign">
+      <defs>
+        <filter id="halo" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="14"/></filter>
+        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4"/></filter>
+        <path id="arcTop" d="M362 402 A88 88 0 0 1 538 402"/>
+        <text id="nScript" transform="rotate(-5 450 200)" x="450" y="200" text-anchor="middle" font-family="Yellowtail, cursive" font-size="210">Stellian's</text>
+        <path id="nSwoosh" transform="rotate(-3 450 240)" fill="none" d="M150 252 C 330 226, 560 214, 790 196 C 650 236, 470 250, 280 274" stroke-linecap="round" stroke-linejoin="round"/>
+        <g id="nRings" fill="none"><circle cx="450" cy="400" r="124" fill="none"/><circle cx="450" cy="400" r="111" fill="none"/></g>
+        <text id="nArc" font-family="Oswald, sans-serif" font-weight="600" font-size="30" letter-spacing="3"><textPath href="#arcTop" startOffset="50%" text-anchor="middle">HOME OF THE</textPath></text>
+        <text id="nLb" x="450" y="452" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="78" letter-spacing="2">8LB</text>
+        <text id="nPz" x="450" y="500" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="44" letter-spacing="5">PIZZA</text>
+        <g id="nAll"><use href="#nScript"/><use href="#nSwoosh"/><use href="#nRings"/><use href="#nArc"/><use href="#nLb"/><use href="#nPz"/></g>
+      </defs>
+      <g class="hardware"><circle cx="180" cy="120" r="5"/><circle cx="740" cy="110" r="5"/><circle cx="300" cy="470" r="5"/><circle cx="600" cy="470" r="5"/></g>
+      <!-- unlit glass -->
+      <g class="glass">
+        <use href="#nAll" class="g-shadow"/>
+        <use href="#nScript" class="g-fill"/><use href="#nSwoosh" class="g-line"/><use href="#nRings" class="g-line"/>
+        <use href="#nArc" class="g-fill"/><use href="#nLb" class="g-fill"/><use href="#nPz" class="g-fill"/>
+      </g>
+      <!-- lit -->
+      <g class="lit">
+        <use href="#nAll" class="l-halo"/>
+        <use href="#nAll" class="l-glow"/>
+        <use href="#nScript" class="l-edge"/>
+        <use href="#nScript" class="l-white bold"/>
+        <use href="#nSwoosh" class="l-wline"/>
+        <use href="#nRings" class="l-rline"/>
+        <use href="#nArc" class="l-white thin"/>
+        <use href="#nLb" class="l-red"/>
+        <use href="#nPz" class="l-white"/>
+      </g>
+    </svg>
+    <div class="transformer" id="transformer" aria-hidden="true"><span>12kV</span></div>
+  </div>
+
+  <!-- WALL SWITCH -->
+  <div class="switch-wrap layer" data-depth="0.5" id="switchWrap">
+    <button class="switch" id="neonSwitch" aria-pressed="true" aria-label="Neon sign power switch">
+      <span class="plate">
+        <i class="screw s1"></i><i class="screw s2"></i>
+        <em class="lbl on">ON</em>
+        <span class="slot"><span class="lever"></span></span>
+        <em class="lbl off">OFF</em>
+      </span>
+    </button>
+    <div class="switch-tag">NEON</div>
+    <div class="switch-hint" id="switchHint">↑ Flip it</div>
+  </div>
+
+  <canvas id="cable" class="cable" aria-hidden="true"></canvas>
+
+  <!-- bar counter -->
+  <div class="counter" aria-hidden="true"></div>
+
+  <!-- real food: their actual Freak Shakes + 8LB pizza -->
+  <div class="food shake shake-a layer" data-depth="0.8" data-tilt>
+    <img src="img/cut/shake-birthday.webp" alt="Stellian's Freak Shake loaded with whipped cream, sprinkles, a brownie and candy" width="628" height="1200">
+    <span class="glare"></span>
+  </div>
+  <div class="food shake shake-b layer" data-depth="0.95" data-tilt>
+    <img src="img/cut/shake-strawberry.webp" alt="Stellian's Strawberry Cheesecake Freak Shake" width="724" height="1200">
+    <span class="glare"></span>
+  </div>
+  <div class="food pizza layer" data-depth="1.1" data-tilt>
+    <div class="steam" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+    <img src="img/cut/pizza-whole.webp" alt="Stellian's 8LB Chicago-style stuffed crust pizza" width="900" height="853">
+    <span class="glare"></span>
+  </div>
+
+  <div class="hero-ui">
+    <h1 class="sr-only">Stellian's — Home of the 8LB Pizza in Central City, Kentucky</h1>
+    <div class="ctas">
+      <a href="#menu" class="btn btn-red"><svg viewBox="0 0 24 24"><path d="M2 5c6-3 14-3 20 0L12 22z"/></svg>View Menu<b>›</b></a>
+      <a href="#visit" class="btn btn-dark"><svg viewBox="0 0 24 24"><path d="M4 5h16v16H4zM4 9h16M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-width="2"/></svg>Plan Your Visit<b>›</b></a>
+    </div>
+    <ul class="perks">
+      <li><svg viewBox="0 0 24 24"><path d="M2 5c6-3 14-3 20 0L12 22z"/></svg>Delicious Pizza</li>
+      <li><svg viewBox="0 0 24 24"><path d="M7 8h10l-1.5 14h-7zM6 6h12v2H6zM12 2l2 4" fill="currentColor"/></svg>Freak Shakes</li>
+      <li><svg viewBox="0 0 24 24"><path d="m12 2 3 7 7 .6-5.3 4.7L18.3 22 12 18l-6.3 4 1.6-7.7L2 9.6 9 9z"/></svg>Unforgettable Vibes</li>
+    </ul>
+  </div>
+  <a class="addr" href="https://maps.google.com/?q=Stellian's+116+E+Broad+St+Central+City+KY+42330" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>116 E Broad St, Central City, KY 42330</a>
+  <div class="tagline">Good Food. Great Times.</div>
+</section>
+
+<!-- ================= 8LB ================= -->
+<section class="eight" id="eight">
+  <div class="eight-photo" data-tilt-card>
+    <img src="img/cut/pizza-cut.webp" alt="Inside Stellian's 8LB pizza — layers of meat, cheese and a second crust" loading="lazy">
+    <div class="weight-tag"><b>8</b><span>LBS</span></div>
+  </div>
+  <div class="eight-copy reveal">
+    <p class="kicker">The pizza that brings everyone to town</p>
+    <h2>The Stellian's Special <span>8LB Chicago Pizza</span></h2>
+    <p>Brick-oven, Chicago-style stuffed crust: crust, your toppings, cheese — then <em>another</em> crust with sauce and more cheese on top. Built tall enough to tip the scale at up to eight pounds. Go half-and-half if your crew can't agree.</p>
+    <p class="tip">House tip: for maximum weight, pick <b>Meat Lovers</b> or <b>The Works</b>.</p>
+    <div class="price-row"><span class="pbox big">$27.99</span><a class="btn btn-red" href="tel:+12707571622">Call it in<b>›</b></a></div>
+    <div class="challenge">
+      <div class="clock" aria-hidden="true"><svg viewBox="0 0 60 60"><circle cx="30" cy="30" r="26"/><path d="M30 12v18l11 7"/></svg><span>40:00</span></div>
+      <div>
+        <h3>8 Pound Chowdown Challenge</h3>
+        <p>Finish a whole Stellian's Special <b>and</b> a Freak Shake in 40 minutes — the meal's on the house and you walk out with the t-shirt.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MENU ================= -->
+<section class="menu" id="menu">
+  <header class="sec-head reveal">
+    <p class="kicker">Straight off the board</p>
+    <h2 class="script-h">Our Menu</h2>
+  </header>
+
+  <div class="tabs" role="tablist" id="tabs"></div>
+
+  <div class="board-stage" id="boardStage">
+    <div class="chains" aria-hidden="true"><i></i><i></i></div>
+    <div class="board" id="board">
+      <div class="board-face">
+        <div class="board-list" id="boardList"></div>
+        <div class="board-photo" id="boardPhoto">
+          <div class="photo-card" id="photoCard">
+            <img id="photoImg" src="img/pizza-8lb-cut.jpg" alt="">
+            <span class="photo-cap" id="photoCap"></span>
+          </div>
+          <div class="photo-extra" id="photoExtra"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="fine">Prices as listed on Stellian's published menu — they can change, call (270) 757-1622 to confirm. Cauliflower crust available on medium specialty pizzas.</p>
+</section>
+
+<!-- ================= FREAK SHAKES ================= -->
+<section class="shakes" id="shakes">
+  <header class="sec-head reveal">
+    <p class="kicker">These aren't desserts — they're events</p>
+    <h2 class="script-h">Freak Shakes</h2>
+  </header>
+  <div class="flow" id="flow" aria-roledescription="carousel">
+    <div class="flow-track" id="flowTrack"></div>
+    <button class="flow-nav prev" id="flowPrev" aria-label="Previous shake">‹</button>
+    <button class="flow-nav next" id="flowNext" aria-label="Next shake">›</button>
+  </div>
+  <div class="flow-info" id="flowInfo"></div>
+</section>
+
+<!-- ================= VIDEOS ================= -->
+<section class="videos" id="videos">
+  <header class="sec-head reveal">
+    <p class="kicker">As seen on</p>
+    <h2 class="script-h">Watch Stellian's</h2>
+  </header>
+  <div class="video-grid">
+    <button class="video reveal" data-yt="2lH9mRGQT54">
+      <img src="https://i.ytimg.com/vi/2lH9mRGQT54/hqdefault.jpg" alt="" loading="lazy">
+      <span class="play"></span>
+      <span class="v-cap"><b>America's Best Restaurants</b>Stellian's — Home of the 8 Pound Pizza</span>
+    </button>
+    <button class="video reveal" data-yt="4zB7DFh9mH4">
+      <img src="https://i.ytimg.com/vi/4zB7DFh9mH4/hqdefault.jpg" alt="" loading="lazy">
+      <span class="play"></span>
+      <span class="v-cap"><b>WBKR Tri-State Bucket List</b>Baseball-sized mushrooms, 8LB pizzas & house-sauce wings</span>
+    </button>
+  </div>
+</section>
+
+<!-- ================= GALLERY ================= -->
+<section class="gallery" id="gallery">
+  <header class="sec-head reveal">
+    <p class="kicker">Real food. Real room. Real dollar-bill walls.</p>
+    <h2 class="script-h">Gallery</h2>
+  </header>
+  <div class="masonry" id="masonry"></div>
+  <h3 class="strip-title">Flip through the printed menu</h3>
+  <div class="strip" id="strip"></div>
+</section>
+
+<!-- ================= REVIEWS ================= -->
+<section class="reviews" id="reviews">
+  <header class="sec-head reveal">
+    <p class="kicker">Worth the drive</p>
+    <h2 class="script-h">What People Say</h2>
+  </header>
+  <div class="review-grid">
+    <figure class="review reveal"><div class="stars">★★★★★</div><blockquote>“The 8lb pizza was HUGE! The hog skins were super puffy and crispy!”</blockquote><figcaption>Caleb W. · Yelp</figcaption></figure>
+    <figure class="review reveal"><div class="stars">★★★★★</div><blockquote>“The pizza and shakes are the best in Central City!”</blockquote><figcaption>Ryan M. · Yelp</figcaption></figure>
+    <figure class="review reveal"><div class="stars">★★★★★</div><blockquote>“I love the cauli crust supreme pizza! Worth my 3 hr drive!”</blockquote><figcaption>Beverly R. P. · Facebook</figcaption></figure>
+    <figure class="review reveal"><div class="stars">★★★★★</div><blockquote>“Cheese Bread! 8lb pizza! Strawberry cheesecake freak shake!!”</blockquote><figcaption>Lisa Marie M. · Facebook</figcaption></figure>
+  </div>
+  <p class="press reveal">Featured by <b>America's Best Restaurants</b>, <b>WBKR</b>, <b>WOMI</b> and <b>Only In Your State</b>.</p>
+</section>
+
+<!-- ================= VISIT ================= -->
+<section class="visit" id="visit">
+  <div class="visit-card reveal" id="contact">
+    <h2 class="script-h">Visit Us</h2>
+    <div class="open-now" id="openNow"><i></i><span>Checking hours…</span></div>
+    <ul class="info">
+      <li><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg><span>116 E Broad St<br>Central City, KY 42330</span></li>
+      <li><svg viewBox="0 0 24 24"><path d="M6.6 10.8a15 15 0 0 0 6.6 6.6l2.2-2.2a1 1 0 0 1 1-.25 11.4 11.4 0 0 0 3.6.6 1 1 0 0 1 1 1V20a1 1 0 0 1-1 1A17 17 0 0 1 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.6 3.6a1 1 0 0 1-.25 1z"/></svg><a href="tel:+12707571622">(270) 757-1622</a></li>
+      <li><svg viewBox="0 0 24 24"><path d="M22 12a10 10 0 1 0-11.6 9.9v-7H7.9V12h2.5V9.8c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.5h-1.3c-1.2 0-1.6.8-1.6 1.6V12h2.8l-.4 2.9h-2.3v7A10 10 0 0 0 22 12z"/></svg><a href="https://www.facebook.com/stellianspizzeria" target="_blank" rel="noopener">facebook.com/stellianspizzeria</a></li>
+    </ul>
+    <table class="hours" id="hours">
+      <tr data-d="1"><td>Monday</td><td>11 AM – 9 PM</td></tr>
+      <tr data-d="2"><td>Tuesday</td><td>11 AM – 9 PM</td></tr>
+      <tr data-d="3"><td>Wednesday</td><td>11 AM – 9 PM</td></tr>
+      <tr data-d="4"><td>Thursday</td><td>11 AM – 9 PM</td></tr>
+      <tr data-d="5"><td>Friday</td><td>11 AM – 10 PM</td></tr>
+      <tr data-d="6"><td>Saturday</td><td>11 AM – 10 PM</td></tr>
+      <tr data-d="0"><td>Sunday</td><td>11 AM – 9 PM</td></tr>
+    </table>
+    <p class="fine">Dine-in, carry-out & curbside pickup. Full bar, game-day TVs and live music nights.</p>
+    <div class="ctas left">
+      <a class="btn btn-red" href="https://maps.google.com/?q=Stellian's+116+E+Broad+St+Central+City+KY+42330" target="_blank" rel="noopener">Get Directions<b>›</b></a>
+      <a class="btn btn-dark" href="tel:+12707571622">Call Now<b>›</b></a>
+    </div>
+  </div>
+  <div class="visit-media reveal">
+    <img src="img/storefront.jpg" alt="Stellian's storefront on East Broad Street in downtown Central City" loading="lazy">
+    <iframe title="Map to Stellian's" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://maps.google.com/maps?q=Stellian's%20116%20E%20Broad%20St%20Central%20City%20KY%2042330&z=16&output=embed"></iframe>
+  </div>
+</section>
+
+<footer class="foot">
+  <div class="foot-logo">Stellian's</div>
+  <p>Home of the 8LB Pizza · Downtown Central City, Kentucky · Since 2011</p>
+  <p class="small">© <span id="yr"></span> Stellian's LLC</p>
+</footer>
+
+<div class="lightbox" id="lightbox" hidden><button aria-label="Close" id="lbClose">×</button><img id="lbImg" alt=""></div>
+
+<script src="app.js"></script>
+</body>
+</html>
