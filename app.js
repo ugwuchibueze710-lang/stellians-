@@ -148,25 +148,56 @@ function power(on, sound) {
 let heardIgnite = false;
 sw.addEventListener('click', () => {
   hint.classList.add('gone');
-  heardIgnite = true;
-  if (AC && AC.state === 'suspended') AC.resume();
-  power(!isOn, true);
+  iosMediaUnlock(); audio();
+  const flip = () => { heardIgnite = true; power(!isOn, true); };
+  if (AC && AC.state !== 'running') AC.resume().then(flip, flip); else flip();
 });
-// Browsers block sound until the visitor's first click/tap/key. On that first touch,
+// Browsers block sound until the visitor's first real tap/click/key. On that first touch,
 // the sign re-strikes once with the full buzz synced to the flicker.
+// iPhone notes: only touchend/click count as a gesture (not touchstart/scroll), and the
+// ringer "silent" switch mutes Web Audio unless an <audio> element starts the media session.
+let iosUnlocked = false;
+function iosMediaUnlock() {
+  if (iosUnlocked) return; iosUnlocked = true;
+  try {
+    // 0.1s of silence as a WAV; playing it switches iOS to the "playback" audio session
+    const sr = 8000, len = 800, buf = new ArrayBuffer(44 + len * 2), v = new DataView(buf);
+    const w = (o, s) => { for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i)); };
+    w(0, 'RIFF'); v.setUint32(4, 36 + len * 2, true); w(8, 'WAVE'); w(12, 'fmt '); v.setUint32(16, 16, true);
+    v.setUint16(20, 1, true); v.setUint16(22, 1, true); v.setUint32(24, sr, true); v.setUint32(28, sr * 2, true);
+    v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, len * 2, true);
+    const url = URL.createObjectURL(new Blob([buf], { type: 'audio/wav' }));
+    const el = new Audio(url); el.setAttribute('playsinline', ''); el.loop = true; el.volume = 0.0001;
+    const p = el.play(); if (p && p.catch) p.catch(() => {});
+    if (navigator.audioSession) navigator.audioSession.type = 'playback';
+  } catch (e) {}
+}
+const GESTURES = ['touchend', 'click', 'pointerup', 'keydown'];
+let unlocking = false;
 function firstTouch(e) {
-  ['pointerdown', 'keydown', 'touchstart'].forEach(ev => removeEventListener(ev, firstTouch, true));
-  if (e.target && e.target.closest && e.target.closest('#neonSwitch')) { audio(); return; }
+  if (heardIgnite && AC && AC.state === 'running') return cleanup();
+  if (unlocking) return;
+  const onSwitch = e.target && e.target.closest && e.target.closest('#neonSwitch');
+  iosMediaUnlock();
   if (!audio()) return;
+  // tiny silent buffer played inside the gesture fully wakes iOS Safari's AudioContext
+  try { const s = AC.createBufferSource(); s.buffer = AC.createBuffer(1, 1, 22050); s.connect(AC.destination); s.start(0); } catch (err) {}
+  unlocking = true;
   const go = () => {
-    if (heardIgnite || !isOn) return;
+    unlocking = false;
+    if (AC.state !== 'running') return;            // not a real gesture yet (e.g. a scroll) – wait for the next one
+    cleanup();
+    if (onSwitch || heardIgnite || !isOn) { heardIgnite = true; return; }
     heardIgnite = true;
     const wait = () => busy ? setTimeout(wait, 120) : (busy = true, runIgnite(true));
     wait();
   };
-  AC.state === 'running' ? go() : AC.resume().then(go).catch(() => {});
+  if (AC.state === 'running') go(); else AC.resume().then(go, () => { unlocking = false; });
 }
-['pointerdown', 'keydown', 'touchstart'].forEach(ev => addEventListener(ev, firstTouch, true));
+function cleanup() { GESTURES.forEach(ev => removeEventListener(ev, firstTouch, true)); }
+GESTURES.forEach(ev => addEventListener(ev, firstTouch, { capture: true, passive: true }));
+// iOS suspends audio when the tab is backgrounded – wake it when they come back
+document.addEventListener('visibilitychange', () => { if (!document.hidden && AC && AC.state === 'suspended' && heardIgnite) AC.resume().catch(() => {}); });
 // idle "aging tube" micro flicker while on
 setInterval(() => {
   if (!isOn || busy || reduce) return;
@@ -615,7 +646,8 @@ let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(lay
   // the sign strikes itself on when the page opens
   setTimeout(() => {
     let allowed = false;
-    try { if (audio() && AC.state === 'running') allowed = true; } catch (e) {}
+    const touchDevice = matchMedia('(pointer: coarse)').matches;
+    try { if (!touchDevice && audio() && AC.state === 'running') allowed = true; } catch (e) {}
     if (allowed) heardIgnite = true;
     power(true, allowed);
   }, 450);
