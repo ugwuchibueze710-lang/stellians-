@@ -75,8 +75,61 @@ function hum(dur) {
   o.start(t); o2.start(t); o.stop(t + dur); o2.stop(t + dur);
 }
 
-// realistic ignition: tubes strike, stutter, then settle
+// realistic ignition: tubes strike, stutter, then settle  (light pattern unchanged)
 const ignite = [[0, .0], [60, .9], [110, .05], [190, .7], [230, 0], [330, .35], [360, .05], [470, 1], [520, .55], [580, 1], [900, .85], [960, 1]];
+
+// ---- neon buzz sound, synced to every flicker step ----
+let humNode = null;
+function zap(level, quiet) {
+  // electrical arc as the gas strikes: crackle + a burst of 120Hz transformer buzz
+  if (!AC || AC.state !== 'running') return;
+  const t = AC.currentTime, k = (quiet ? 0.35 : 1) * (0.45 + level * 0.55);
+  const n = AC.createBufferSource(); n.buffer = noiseBuf(0.07 + Math.random() * 0.05);
+  const bp = AC.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 2600 + Math.random() * 2400; bp.Q.value = 0.9;
+  const ng = AC.createGain(); ng.gain.setValueAtTime(0.55 * k, t); ng.gain.exponentialRampToValueAtTime(0.001, t + 0.09);
+  n.connect(bp).connect(ng).connect(master); n.start(t);
+  const o = AC.createOscillator(); o.type = 'sawtooth'; o.frequency.value = 120;
+  const o2 = AC.createOscillator(); o2.type = 'square'; o2.frequency.value = 240;
+  const lp = AC.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1400;
+  const og = AC.createGain(); og.gain.setValueAtTime(0.0001, t); og.gain.linearRampToValueAtTime(0.16 * k, t + 0.008); og.gain.exponentialRampToValueAtTime(0.001, t + 0.11);
+  o.connect(lp); o2.connect(lp); lp.connect(og).connect(master);
+  o.start(t); o2.start(t); o.stop(t + 0.13); o2.stop(t + 0.13);
+}
+function tick() { // tube dropping out: small dry snap
+  if (!AC || AC.state !== 'running') return;
+  const t = AC.currentTime, n = AC.createBufferSource(); n.buffer = noiseBuf(0.025);
+  const hp = AC.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 3500;
+  const g = AC.createGain(); g.gain.value = 0.18; n.connect(hp).connect(g).connect(master); n.start(t);
+}
+function humOn(level) { // steady neon hum that rides the brightness, then settles low
+  if (!AC || AC.state !== 'running') return;
+  if (!humNode) {
+    const o = AC.createOscillator(); o.type = 'sawtooth'; o.frequency.value = 120;
+    const o2 = AC.createOscillator(); o2.type = 'triangle'; o2.frequency.value = 60;
+    const lp = AC.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 520;
+    const g = AC.createGain(); g.gain.value = 0;
+    o.connect(lp); o2.connect(lp); lp.connect(g).connect(master); o.start(); o2.start();
+    humNode = { g };
+  }
+  const t = AC.currentTime;
+  humNode.g.gain.cancelScheduledValues(t);
+  humNode.g.gain.setTargetAtTime(0.05 * level, t, 0.01);
+}
+function humSettle() { if (humNode && AC) { const t = AC.currentTime; humNode.g.gain.setTargetAtTime(0.012, t + 0.3, 0.6); } }
+function humOff() { if (humNode && AC) humNode.g.gain.setTargetAtTime(0, AC.currentTime, 0.03); }
+
+function runIgnite(sound) {
+  let prev = neon;
+  ignite.forEach(([ms, v]) => setTimeout(() => {
+    setNeon(v);
+    if (sound) {
+      if (v > prev + 0.2) zap(v); else if (v < prev - 0.2) tick();
+      humOn(v);
+    }
+    prev = v;
+  }, ms));
+  setTimeout(() => { busy = false; if (sound) humSettle(); }, 1000);
+}
 function power(on, sound) {
   if (busy) return;
   isOn = on; busy = true;
@@ -86,23 +139,38 @@ function power(on, sound) {
   kickCable(on ? -1 : 1);
   if (reduce) { setNeon(on ? 1 : 0); busy = false; return; }
   if (on) {
-    if (sound) hum(1.6);
-    const t0 = performance.now();
-    ignite.forEach(([ms, v]) => setTimeout(() => { setNeon(v); if (sound && v > .5) crackle(0); }, ms));
-    setTimeout(() => { busy = false; }, 1000);
+    runIgnite(sound);
   } else {
-    // power cut: instant drop, faint afterglow in the core
+    if (sound) { tick(); humOff(); }
     setNeon(.18); setTimeout(() => setNeon(.06), 60); setTimeout(() => { setNeon(0); busy = false; }, 220);
   }
 }
+let heardIgnite = false;
 sw.addEventListener('click', () => {
   hint.classList.add('gone');
+  heardIgnite = true;
+  if (AC && AC.state === 'suspended') AC.resume();
   power(!isOn, true);
 });
+// Browsers block sound until the visitor's first click/tap/key. On that first touch,
+// the sign re-strikes once with the full buzz synced to the flicker.
+function firstTouch(e) {
+  ['pointerdown', 'keydown', 'touchstart'].forEach(ev => removeEventListener(ev, firstTouch, true));
+  if (e.target && e.target.closest && e.target.closest('#neonSwitch')) { audio(); return; }
+  if (!audio()) return;
+  const go = () => {
+    if (heardIgnite || !isOn) return;
+    heardIgnite = true;
+    const wait = () => busy ? setTimeout(wait, 120) : (busy = true, runIgnite(true));
+    wait();
+  };
+  AC.state === 'running' ? go() : AC.resume().then(go).catch(() => {});
+}
+['pointerdown', 'keydown', 'touchstart'].forEach(ev => addEventListener(ev, firstTouch, true));
 // idle "aging tube" micro flicker while on
 setInterval(() => {
   if (!isOn || busy || reduce) return;
-  if (Math.random() < .25) { setNeon(.82); setTimeout(() => setNeon(1), 70); }
+  if (Math.random() < .25) { setNeon(.82); tick(); setTimeout(() => { setNeon(1); zap(1, true); }, 70); }
 }, 2600);
 
 /* ================= CABLE (verlet rope) ================= */
@@ -545,6 +613,11 @@ let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(lay
   layout();
   requestAnimationFrame(frame);
   // the sign strikes itself on when the page opens
-  setTimeout(() => power(true, false), 450);
+  setTimeout(() => {
+    let allowed = false;
+    try { if (audio() && AC.state === 'running') allowed = true; } catch (e) {}
+    if (allowed) heardIgnite = true;
+    power(true, allowed);
+  }, 450);
 });
 })();
