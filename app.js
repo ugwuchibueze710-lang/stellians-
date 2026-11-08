@@ -5,7 +5,7 @@ const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
 const root = document.documentElement;
 const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const hero = $('#home');
+const hero = $('#home'), stage = $('#stage'), px = $('#px'), pizzaFg = $('#pizzaFg');
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 
 /* ================= NAV ================= */
@@ -22,71 +22,6 @@ const navObs = new IntersectionObserver(es => es.forEach(e => {
   $$('a', links).forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#' + id));
 }), { rootMargin: '-45% 0px -50% 0px' });
 $$('section[id]').forEach(s => navObs.observe(s));
-
-/* ================= DOLLAR-BILL WALL ================= */
-const wall = $('#wall'), wctx = wall.getContext('2d');
-function rnd(a, b) { return a + Math.random() * (b - a); }
-function drawWall() {
-  const dpr = Math.min(devicePixelRatio || 1, 1.5);
-  const W = hero.clientWidth, H = hero.clientHeight;
-  wall.width = W * dpr; wall.height = H * dpr;
-  const c = wctx; c.setTransform(dpr, 0, 0, dpr, 0, 0);
-  c.fillStyle = '#231d17'; c.fillRect(0, 0, W, H);
-  const bw = 96, bh = 42;
-  c.fillStyle = '#0c0606'; c.fillRect(0, 0, W, H);
-  const inks = ['#1d2a5a', '#111', '#7a1020', '#18451f', '#3a2a66'];
-  for (let y = -10; y < H + 20; y += bh + 3) {
-    const off = rnd(-20, 20);
-    for (let x = -40 + off; x < W + 40; x += bw + 3) {
-      c.save();
-      c.translate(x + rnd(-3, 3), y + rnd(-2, 2));
-      c.rotate(rnd(-0.05, 0.05));
-      const L = rnd(80, 94), Hh = rnd(70, 100);
-      c.fillStyle = `hsl(${Hh} 9% ${L}%)`;
-      c.shadowColor = 'rgba(0,0,0,.6)'; c.shadowBlur = 3; c.shadowOffsetY = 1.5;
-      c.fillRect(-bw / 2, -bh / 2, bw, bh);
-      c.shadowColor = 'transparent';
-      // ornate engraved frame
-      c.strokeStyle = 'rgba(28,40,32,.85)'; c.lineWidth = 2; c.strokeRect(-bw / 2 + 3, -bh / 2 + 3, bw - 6, bh - 6);
-      c.lineWidth = .7; c.strokeRect(-bw / 2 + 6, -bh / 2 + 6, bw - 12, bh - 12);
-      c.fillStyle = 'rgba(28,40,32,.55)';
-      for (let k = 0; k < 3; k++) c.fillRect(-bw / 2 + 9, -bh / 2 + 9 + k * 4, 22, 1.4);
-      for (let k = 0; k < 3; k++) c.fillRect(bw / 2 - 31, bh / 2 - 19 + k * 4, 22, 1.4);
-      // portrait
-      c.fillStyle = 'rgba(30,38,30,.85)';
-      c.beginPath(); c.ellipse(0, 0, 11, 15, 0, 0, 7); c.fill();
-      c.fillStyle = `hsl(${Hh} 8% ${L - 18}%)`;
-      c.beginPath(); c.ellipse(0, -1, 6.5, 9, 0, 0, 7); c.fill();
-      c.fillStyle = 'rgba(30,38,30,.8)'; c.beginPath(); c.ellipse(0, 7, 8, 5, 0, Math.PI, 0, true); c.fill();
-      // seals + corner 1s
-      c.fillStyle = 'rgba(30,90,50,.85)'; c.beginPath(); c.arc(bw / 2 - 24, 2, 5, 0, 7); c.fill();
-      c.fillStyle = 'rgba(20,20,20,.75)'; c.beginPath(); c.arc(-bw / 2 + 24, 2, 4.5, 0, 7); c.fill();
-      c.font = '700 10px Oswald, sans-serif'; c.fillStyle = 'rgba(28,40,32,.9)';
-      c.fillText('1', -bw / 2 + 7, bh / 2 - 6); c.fillText('1', bw / 2 - 12, -bh / 2 + 15);
-      // customer signatures
-      if (Math.random() < .8) {
-        c.strokeStyle = inks[(Math.random() * inks.length) | 0]; c.globalAlpha = rnd(.55, .95);
-        c.lineWidth = rnd(1, 1.8); c.beginPath();
-        let sx = rnd(-bw / 2 + 8, -10), sy = rnd(-12, 12); c.moveTo(sx, sy);
-        for (let k = 0; k < 6; k++) c.quadraticCurveTo(sx + rnd(3, 9), sy + rnd(-8, 8), sx += rnd(6, 12), sy + rnd(-3, 3));
-        c.stroke(); c.globalAlpha = 1;
-      }
-      if (Math.random() < .12) { c.fillStyle = 'rgba(255,250,220,.4)'; c.fillRect(-9, -bh / 2 - 4, 18, 9); }
-      c.fillStyle = `rgba(90,60,20,${rnd(0, .12)})`; c.fillRect(-bw / 2, -bh / 2, bw, bh);
-      c.restore();
-    }
-  }
-  // overall darken + warm grade (lighting comes from overlays)
-  c.globalCompositeOperation = 'multiply';
-  c.fillStyle = '#d29a94'; c.fillRect(0, 0, W, H);
-  const rg = c.createRadialGradient(W * .52, H * .3, 50, W * .52, H * .3, W * .7);
-  rg.addColorStop(0, '#ffffff'); rg.addColorStop(.5, '#b07a74'); rg.addColorStop(1, '#3a2220');
-  c.fillStyle = rg; c.fillRect(0, 0, W, H);
-  c.globalCompositeOperation = 'source-over';
-  const g = c.createLinearGradient(0, 0, 0, H * .3);
-  g.addColorStop(0, 'rgba(0,0,0,.4)'); g.addColorStop(1, 'rgba(0,0,0,0)');
-  c.fillStyle = g; c.fillRect(0, 0, W, H * .3);
-}
 
 /* ================= NEON POWER ================= */
 let neon = 0, target = 1, isOn = false, busy = false;
@@ -176,7 +111,7 @@ const transformer = $('#transformer'), plate = $('.plate', sw);
 let pts = [], A = { x: 0, y: 0 }, B = { x: 0, y: 0 }, seg = 10, N = 34, dpr = 1;
 const ptr = { x: -999, y: -999, vx: 0, vy: 0, inside: false };
 function anchors() {
-  const h = hero.getBoundingClientRect();
+  const h = stage.getBoundingClientRect();
   const t = transformer.getBoundingClientRect(), p = plate.getBoundingClientRect();
   A = { x: t.left - h.left + t.width * .5, y: t.bottom - h.top - 2 };
   B = { x: p.left - h.left + p.width * .5, y: p.top - h.top + 3 };
@@ -187,7 +122,7 @@ function buildRope() {
   dpr = Math.min(devicePixelRatio || 1, 2);
   cv.width = h.width * dpr; cv.height = h.height * dpr;
   const dist = Math.hypot(B.x - A.x, B.y - A.y);
-  const len = dist * 1.18 + 90;
+  const len = dist * 1.25 + h.width * .045;
   seg = len / (N - 1);
   pts = [];
   for (let i = 0; i < N; i++) {
@@ -197,7 +132,7 @@ function buildRope() {
   }
 }
 function kickCable(dir) {
-  for (let i = N - 8; i < N - 1; i++) { pts[i] && (pts[i].oy += dir * 6 * (i - N + 9) / 8, pts[i].ox += 4); }
+  for (let i = N - 8; i < N - 1; i++) { pts[i] && (pts[i].oy += dir * 3 * (i - N + 9) / 8, pts[i].ox += 2); }
 }
 function stepRope() {
   const g = 0.5, damp = 0.985;
@@ -234,24 +169,25 @@ function pathRope(ox = 0, oy = 0) {
 function drawRope() {
   cx.setTransform(dpr, 0, 0, dpr, 0, 0);
   cx.clearRect(0, 0, cv.width, cv.height);
+  const s = Math.max(.55, cv.width / dpr / 1672);
   cx.lineCap = 'round'; cx.lineJoin = 'round';
   // shadow cast on the wall
-  cx.save(); cx.filter = 'blur(5px)'; cx.strokeStyle = 'rgba(0,0,0,.55)'; cx.lineWidth = 8; pathRope(9, 14); cx.stroke(); cx.restore();
+  cx.save(); cx.filter = 'blur(5px)'; cx.strokeStyle = 'rgba(0,0,0,.55)'; cx.lineWidth = 8 * s; pathRope(9, 14); cx.stroke(); cx.restore();
   // rubber jacket
-  cx.strokeStyle = '#0c0c0d'; cx.lineWidth = 7; pathRope(); cx.stroke();
-  cx.strokeStyle = '#1d1d20'; cx.lineWidth = 4.5; pathRope(); cx.stroke();
+  cx.strokeStyle = '#0c0c0d'; cx.lineWidth = 7 * s; pathRope(); cx.stroke();
+  cx.strokeStyle = '#1d1d20'; cx.lineWidth = 4.5 * s; pathRope(); cx.stroke();
   // specular + red neon reflection
-  cx.strokeStyle = 'rgba(255,255,255,.22)'; cx.lineWidth = 1.3; pathRope(-1, -1.8); cx.stroke();
-  cx.strokeStyle = `rgba(255,40,55,${(.55 * neon).toFixed(3)})`; cx.lineWidth = 1.6; pathRope(-.6, -2.2); cx.stroke();
+  cx.strokeStyle = 'rgba(255,255,255,.22)'; cx.lineWidth = 1.3 * s; pathRope(-1, -1.8); cx.stroke();
+  cx.strokeStyle = `rgba(255,40,55,${(.55 * neon).toFixed(3)})`; cx.lineWidth = 1.6 * s; pathRope(-.6, -2.2); cx.stroke();
   // strain-relief collars
-  [pts[0], pts[N - 1]].forEach(p => { cx.fillStyle = '#2c2d31'; cx.beginPath(); cx.arc(p.x, p.y, 6, 0, 7); cx.fill(); cx.fillStyle = '#8b8f96'; cx.beginPath(); cx.arc(p.x - 1.5, p.y - 1.5, 2, 0, 7); cx.fill(); });
+  [pts[0], pts[N - 1]].forEach(p => { cx.fillStyle = '#2c2d31'; cx.beginPath(); cx.arc(p.x, p.y, 6 * s, 0, 7); cx.fill(); cx.fillStyle = '#8b8f96'; cx.beginPath(); cx.arc(p.x - 1.5 * s, p.y - 1.5 * s, 2 * s, 0, 7); cx.fill(); });
 }
 
 /* ================= PARALLAX + REACTIVE FOOD ================= */
-const layers = $$('.layer', hero).map(el => ({ el, d: parseFloat(el.dataset.depth || 0), tilt: el.hasAttribute('data-tilt'), img: $('img', el), glare: $('.glare', el), seed: Math.random() * 10 }));
+const layers = $$('.food', stage).map(el => ({ el, d: parseFloat(el.dataset.depth || 1), tilt: true, glare: $('.glare', el), seed: Math.random() * 10 }));
 let mx = 0, my = 0, tmx = 0, tmy = 0;
 hero.addEventListener('pointermove', e => {
-  const r = hero.getBoundingClientRect();
+  const r = stage.getBoundingClientRect();
   tmx = (e.clientX - r.left) / r.width * 2 - 1; tmy = (e.clientY - r.top) / r.height * 2 - 1;
   const x = e.clientX - r.left, y = e.clientY - r.top;
   if (!ptr.inside) { ptr.x = x; ptr.y = y; }
@@ -271,11 +207,16 @@ function frame(now) {
   if (!heroVisible) return;
   const t = now / 1000; last = now;
   mx += (tmx - mx) * .07; my += (tmy - my) * .07;
+  const k = stage.clientWidth / 1672;
+  px.style.transform = `translate3d(${(-mx * 9 * k).toFixed(2)}px,${(-my * 6 * k).toFixed(2)}px,0) scale(1.03)`;
+  pizzaFg.style.transform = px.style.transform;
+  
+  root.style.setProperty('--breath', (0.85 + Math.sin(t * 1.7) * 0.08 + Math.sin(t * 7.3) * 0.03).toFixed(3));
   for (const L of layers) {
-    let tf = `translate3d(${(-mx * L.d * 22).toFixed(2)}px,${(-my * L.d * 14).toFixed(2)}px,0)`;
+    let tf = `translate3d(${(-mx * L.d * 16 * k).toFixed(2)}px,${(-my * L.d * 9 * k).toFixed(2)}px,0)`;
     if (L.tilt && !reduce) {
-      const bob = Math.sin(t * 1.3 + L.seed) * 5;
-      const ry = mx * 16 + Math.sin(t * .7 + L.seed) * 3, rx = -my * 10;
+      const bob = Math.sin(t * 1.3 + L.seed) * 3 * k;
+      const ry = mx * 14 + Math.sin(t * .7 + L.seed) * 2.5, rx = -my * 8;
       tf += ` translateY(${bob.toFixed(2)}px) rotateY(${ry.toFixed(2)}deg) rotateX(${rx.toFixed(2)}deg)`;
       if (L.glare) L.glare.style.setProperty('--gx', (50 + mx * 60 + Math.sin(t * .5 + L.seed) * 15).toFixed(1) + '%');
     }
@@ -400,13 +341,13 @@ function openCat(c, anim) {
   }, 320);
 }
 openCat(MENU[0], false);
-const stage = $('#boardStage');
-stage.addEventListener('pointermove', e => {
-  const r = stage.getBoundingClientRect();
+const bStage = $('#boardStage');
+bStage.addEventListener('pointermove', e => {
+  const r = bStage.getBoundingClientRect();
   board.style.setProperty('--bx', ((e.clientX - r.left) / r.width * 2 - 1).toFixed(3));
   board.style.setProperty('--by', ((e.clientY - r.top) / r.height * 2 - 1).toFixed(3));
 });
-stage.addEventListener('pointerleave', () => { board.style.setProperty('--bx', 0); board.style.setProperty('--by', 0); });
+bStage.addEventListener('pointerleave', () => { board.style.setProperty('--bx', 0); board.style.setProperty('--by', 0); });
 
 /* ================= 8LB photo tilt ================= */
 $$('[data-tilt-card]').forEach(el => {
@@ -501,7 +442,7 @@ $$('.reveal').forEach(el => rv.observe(el));
 $('#yr').textContent = new Date().getFullYear();
 
 /* ================= BOOT ================= */
-function layout() { drawWall(); buildRope(); }
+function layout() { buildRope(); }
 let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(layout, 150); });
 (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => {
   layout();

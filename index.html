@@ -8,7 +8,7 @@
 <meta name="theme-color" content="#0b0507">
 <meta property="og:title" content="Stellian's — Home of the 8LB Pizza">
 <meta property="og:description" content="8LB Chicago-style stuffed crust pizza, Mozzi Bread & Freak Shakes in Central City, KY.">
-<meta property="og:image" content="img/pizza-8lb-cut.jpg">
+<meta property="og:image" content="img/hero/room-on.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Yellowtail&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -36,120 +36,56 @@
 
 <!-- ================= HERO ================= -->
 <section class="hero" id="home">
-  <canvas id="wall" class="wall" aria-hidden="true"></canvas>
-  <div class="ambient" aria-hidden="true"></div>
-  <div class="pendants" aria-hidden="true"><i></i><i></i><i></i></div>
-  <div class="fan" aria-hidden="true">
-    <div class="fan-rod"></div>
-    <div class="fan-blades"><i></i><i></i><i></i><i></i><i></i></div>
-    <div class="fan-hub"></div>
-    <div class="fan-lights"><b></b><b></b><b></b></div>
-  </div>
-  <div class="fan fan2" aria-hidden="true">
-    <div class="fan-rod"></div>
-    <div class="fan-blades"><i></i><i></i><i></i><i></i><i></i></div>
-    <div class="fan-hub"></div>
-    <div class="fan-lights"><b></b><b></b><b></b></div>
-  </div>
-  <div class="blue-sign" aria-hidden="true"><span>OPEN</span></div>
-  <div class="spill" aria-hidden="true"></div>
+  <div class="stage" id="stage">
+    <div class="parallax" id="px">
+      <img class="room room-off" src="img/hero/room-off.webp" alt="" aria-hidden="true" fetchpriority="high">
+      <img class="room room-on" src="img/hero/room-on.webp" alt="Inside Stellian's: dollar-bill covered walls under the red Stellian's — Home of the 8LB Pizza neon sign" fetchpriority="high">
+      <div class="bloom" aria-hidden="true"></div>
+    </div>
 
-  <!-- doorway into the real dining room -->
-  <div class="doorway layer" data-depth="0.25" aria-hidden="true">
-    <div class="doorway-photo"></div>
-  </div>
+    <!-- transformer, cable & wall switch -->
+    <div class="transformer" id="transformer" aria-hidden="true"><span>NEON</span></div>
+    <canvas id="cable" class="cable" aria-hidden="true"></canvas>
+    <div class="switch-wrap" id="switchWrap">
+      <button class="switch" id="neonSwitch" aria-pressed="true" aria-label="Neon sign power switch">
+        <span class="plate"><i class="screw s1"></i><i class="screw s2"></i><em class="lbl on">ON</em><span class="slot"><span class="lever"></span></span><em class="lbl off">OFF</em></span>
+      </button>
+      <div class="switch-hint" id="switchHint">↑ Flip it</div>
+    </div>
 
-  <!-- EAT PIZZA mini neon (always lit) -->
-  <div class="eat-sign layer" data-depth="0.35" aria-hidden="true">
-    <span class="eat">EAT</span><span class="pz">PIZZA</span>
-  </div>
-
-  <!-- MAIN NEON SIGN -->
-  <div class="sign-wrap layer" data-depth="0.5" id="signWrap">
-    <svg class="neon" id="neon" viewBox="0 0 900 530" role="img" aria-label="Stellian's — Home of the 8LB Pizza neon sign">
-      <defs>
-        <filter id="halo" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="14"/></filter>
-        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="4"/></filter>
-        <path id="arcTop" d="M362 402 A88 88 0 0 1 538 402"/>
-        <text id="nScript" transform="rotate(-5 450 200)" x="450" y="200" text-anchor="middle" font-family="Yellowtail, cursive" font-size="210">Stellian's</text>
-        <path id="nSwoosh" transform="rotate(-3 450 240)" fill="none" d="M150 252 C 330 226, 560 214, 790 196 C 650 236, 470 250, 280 274" stroke-linecap="round" stroke-linejoin="round"/>
-        <g id="nRings" fill="none"><circle cx="450" cy="400" r="124" fill="none"/><circle cx="450" cy="400" r="111" fill="none"/></g>
-        <text id="nArc" font-family="Oswald, sans-serif" font-weight="600" font-size="30" letter-spacing="3"><textPath href="#arcTop" startOffset="50%" text-anchor="middle">HOME OF THE</textPath></text>
-        <text id="nLb" x="450" y="452" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="78" letter-spacing="2">8LB</text>
-        <text id="nPz" x="450" y="500" text-anchor="middle" font-family="Oswald, sans-serif" font-weight="700" font-size="44" letter-spacing="5">PIZZA</text>
-        <g id="nAll"><use href="#nScript"/><use href="#nSwoosh"/><use href="#nRings"/><use href="#nArc"/><use href="#nLb"/><use href="#nPz"/></g>
-      </defs>
-      <g class="hardware"><circle cx="180" cy="120" r="5"/><circle cx="740" cy="110" r="5"/><circle cx="300" cy="470" r="5"/><circle cx="600" cy="470" r="5"/></g>
-      <!-- unlit glass -->
-      <g class="glass">
-        <use href="#nAll" class="g-shadow"/>
-        <use href="#nScript" class="g-fill"/><use href="#nSwoosh" class="g-line"/><use href="#nRings" class="g-line"/>
-        <use href="#nArc" class="g-fill"/><use href="#nLb" class="g-fill"/><use href="#nPz" class="g-fill"/>
-      </g>
-      <!-- lit -->
-      <g class="lit">
-        <use href="#nAll" class="l-halo"/>
-        <use href="#nAll" class="l-glow"/>
-        <use href="#nScript" class="l-edge"/>
-        <use href="#nScript" class="l-white bold"/>
-        <use href="#nSwoosh" class="l-wline"/>
-        <use href="#nRings" class="l-rline"/>
-        <use href="#nArc" class="l-white thin"/>
-        <use href="#nLb" class="l-red"/>
-        <use href="#nPz" class="l-white"/>
-      </g>
-    </svg>
-    <div class="transformer" id="transformer" aria-hidden="true"><span>12kV</span></div>
-  </div>
-
-  <!-- WALL SWITCH -->
-  <div class="switch-wrap layer" data-depth="0.5" id="switchWrap">
-    <button class="switch" id="neonSwitch" aria-pressed="true" aria-label="Neon sign power switch">
-      <span class="plate">
-        <i class="screw s1"></i><i class="screw s2"></i>
-        <em class="lbl on">ON</em>
-        <span class="slot"><span class="lever"></span></span>
-        <em class="lbl off">OFF</em>
-      </span>
-    </button>
-    <div class="switch-tag">NEON</div>
-    <div class="switch-hint" id="switchHint">↑ Flip it</div>
-  </div>
-
-  <canvas id="cable" class="cable" aria-hidden="true"></canvas>
-
-  <!-- bar counter -->
-  <div class="counter" aria-hidden="true"></div>
-
-  <!-- real food: their actual Freak Shakes + 8LB pizza -->
-  <div class="food shake shake-a layer" data-depth="0.8" data-tilt>
-    <img src="img/cut/shake-birthday.webp" alt="Stellian's Freak Shake loaded with whipped cream, sprinkles, a brownie and candy" width="628" height="1200">
-    <span class="glare"></span>
-  </div>
-  <div class="food shake shake-b layer" data-depth="0.95" data-tilt>
-    <img src="img/cut/shake-strawberry.webp" alt="Stellian's Strawberry Cheesecake Freak Shake" width="724" height="1200">
-    <span class="glare"></span>
-  </div>
-  <div class="food pizza layer" data-depth="1.1" data-tilt>
+    <!-- the real Stellian's Freak Shakes -->
+    <div class="food shake shake-a" data-depth="1" data-tilt>
+      <img src="img/cut/shake-birthday.webp" alt="Stellian's Freak Shake piled with whipped cream, sprinkles, a brownie and candy" width="628" height="1200">
+      <span class="tint"></span><span class="glare"></span>
+    </div>
+    <div class="food shake shake-b" data-depth="1.1" data-tilt>
+      <img src="img/cut/shake-strawberry.webp" alt="Stellian's Strawberry Cheesecake Freak Shake" width="724" height="1200">
+      <span class="tint"></span><span class="glare"></span>
+    </div>
+    <img class="pizza-fg" id="pizzaFg" src="img/hero/pizza-fg.webp" alt="" aria-hidden="true">
     <div class="steam" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
-    <img src="img/cut/pizza-whole.webp" alt="Stellian's 8LB Chicago-style stuffed crust pizza" width="900" height="853">
-    <span class="glare"></span>
-  </div>
 
-  <div class="hero-ui">
-    <h1 class="sr-only">Stellian's — Home of the 8LB Pizza in Central City, Kentucky</h1>
-    <div class="ctas">
+    <!-- interactive UI placed exactly where the design has it -->
+    <a href="#menu" class="btn btn-red cta-1"><svg viewBox="0 0 24 24"><path d="M2 5c6-3 14-3 20 0L12 22z"/><circle cx="9" cy="8.5" r="1.5" fill="#c40f1f"/><circle cx="14" cy="8" r="1.5" fill="#c40f1f"/><circle cx="12" cy="13" r="1.5" fill="#c40f1f"/></svg>View Menu<b>›</b></a>
+    <a href="#visit" class="btn btn-dark cta-2"><svg viewBox="0 0 24 24"><path d="M4 5h16v16H4zM4 9h16M8 3v4M16 3v4M8 13h2M12 13h2M16 13h2M8 17h2M12 17h2" fill="none" stroke="currentColor" stroke-width="2"/></svg>Plan Your Visit<b>›</b></a>
+    <ul class="perks">
+      <li><svg viewBox="0 0 24 24"><path d="M2 5c6-3 14-3 20 0L12 22z"/><circle cx="9" cy="8.5" r="1.4" fill="#2a1306"/><circle cx="14" cy="8" r="1.4" fill="#2a1306"/></svg>Delicious Pizza</li>
+      <li><svg viewBox="0 0 24 24"><path d="M7 8h10l-1.5 14h-7zM6 6h12v2H6zM12 1l2 5"/></svg>Freak Shakes</li>
+      <li><svg viewBox="0 0 24 24"><path d="m12 2 3 7 7 .6-5.3 4.7L18.3 22 12 18l-6.3 4 1.6-7.7L2 9.6 9 9z" fill="none" stroke="currentColor" stroke-width="2"/></svg>Unforgettable Vibes</li>
+    </ul>
+    <a class="addr" href="https://maps.google.com/?q=Stellian's+116+E+Broad+St+Central+City+KY+42330" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>116 E Broad St, Central City, KY 42330</a>
+    <div class="tagline">Good Food. Great Times.</div>
+  </div>
+  <div class="hero-bar">
+    <div class="hb-ctas">
       <a href="#menu" class="btn btn-red"><svg viewBox="0 0 24 24"><path d="M2 5c6-3 14-3 20 0L12 22z"/></svg>View Menu<b>›</b></a>
       <a href="#visit" class="btn btn-dark"><svg viewBox="0 0 24 24"><path d="M4 5h16v16H4zM4 9h16M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-width="2"/></svg>Plan Your Visit<b>›</b></a>
     </div>
-    <ul class="perks">
-      <li><svg viewBox="0 0 24 24"><path d="M2 5c6-3 14-3 20 0L12 22z"/></svg>Delicious Pizza</li>
-      <li><svg viewBox="0 0 24 24"><path d="M7 8h10l-1.5 14h-7zM6 6h12v2H6zM12 2l2 4" fill="currentColor"/></svg>Freak Shakes</li>
-      <li><svg viewBox="0 0 24 24"><path d="m12 2 3 7 7 .6-5.3 4.7L18.3 22 12 18l-6.3 4 1.6-7.7L2 9.6 9 9z"/></svg>Unforgettable Vibes</li>
-    </ul>
+    <ul class="hb-perks"><li>🍕 Delicious Pizza</li><li>🥤 Freak Shakes</li><li>⭐ Unforgettable Vibes</li></ul>
+    <a class="hb-addr" href="https://maps.google.com/?q=Stellian's+116+E+Broad+St+Central+City+KY+42330" target="_blank" rel="noopener">📍 116 E Broad St, Central City, KY 42330</a>
+    <div class="hb-tag">Good Food. Great Times.</div>
   </div>
-  <a class="addr" href="https://maps.google.com/?q=Stellian's+116+E+Broad+St+Central+City+KY+42330" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"/></svg>116 E Broad St, Central City, KY 42330</a>
-  <div class="tagline">Good Food. Great Times.</div>
+  <h1 class="sr-only">Stellian's — Home of the 8LB Pizza in Central City, Kentucky</h1>
 </section>
 
 <!-- ================= 8LB ================= -->
