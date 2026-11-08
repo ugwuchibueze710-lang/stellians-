@@ -442,6 +442,98 @@ $$('.reveal').forEach(el => rv.observe(el));
 })();
 $('#yr').textContent = new Date().getFullYear();
 
+
+/* ================= ENDLESS NEON FIELD =================
+   Hundreds of the real Stellian's sign (cut from the hero photo) at three depths.
+   They fall with your scroll (nearer = faster), tilt and streak with scroll speed,
+   and every sign buzzes / flickers on its own like aging neon. */
+(function neonField() {
+  const cv = document.getElementById('neonField'); if (!cv) return;
+  const ctx = cv.getContext('2d');
+  const sprite = new Image(); sprite.src = 'img/hero/neon-sprite.webp';
+  const AR = 368 / 468;
+  const LAYERS = [
+    { n: 0.000045, w: [46, 70],  speed: 0.18, alpha: 0.30, blur: 1.6 },
+    { n: 0.000030, w: [78, 112], speed: 0.38, alpha: 0.55, blur: 0.6 },
+    { n: 0.000012, w: [128, 170], speed: 0.72, alpha: 0.85, blur: 0 }
+  ];
+  let W = 0, H = 0, dpr = 1, items = [], bake = [];
+  let lastY = scrollY, vel = 0, smoothVel = 0;
+  function bakeSprites() {
+    // pre-render each layer's sprite once at its blur level (fast drawing every frame)
+    bake = LAYERS.map(L => {
+      const w = Math.round(L.w[1] * dpr), h = Math.round(w * AR);
+      const c = document.createElement('canvas'); c.width = w + 40; c.height = h + 40;
+      const x = c.getContext('2d');
+      if (L.blur) x.filter = `blur(${L.blur * dpr}px)`;
+      x.drawImage(sprite, 20, 20, w, h);
+      return c;
+    });
+  }
+  function build() {
+    dpr = Math.min(devicePixelRatio || 1, 1.5);
+    W = innerWidth; H = innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr;
+    items = [];
+    const span = H + 260;
+    LAYERS.forEach((L, li) => {
+      // jittered grid = evenly filled, no clumps, no empty holes
+      const cw = L.w[1] * (li === 0 ? 1.55 : li === 1 ? 1.75 : 2.1), ch = cw * AR * 1.55;
+      const cols = Math.ceil((W + 120) / cw), rows = Math.ceil(span / ch);
+      const ox = Math.random() * cw, oy = Math.random() * ch;
+      for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+        const px = (c * cw + ox + (r % 2) * cw * 0.5 + (Math.random() - .5) * cw * 0.45) % (W + 120);
+        const py = (r * ch + oy + (Math.random() - .5) * ch * 0.4) % span;
+        items.push({
+          li, x: px / (W + 120), y: py / span, w: L.w[0] + Math.random() * (L.w[1] - L.w[0]),
+          rot: (Math.random() - .5) * 0.45, spin: (Math.random() - .5) * 0.0006,
+          ph: Math.random() * 1000, flick: 0, next: performance.now() + 800 + Math.random() * 9000
+        });
+      }
+    });
+    items.sort((a, b) => a.li - b.li);
+    if (sprite.complete && sprite.naturalWidth) bakeSprites();
+  }
+  sprite.onload = bakeSprites;
+  function frame(now) {
+    requestAnimationFrame(frame);
+    if (document.hidden || !bake.length) return;
+    const sy = scrollY; vel = sy - lastY; lastY = sy;
+    smoothVel += (vel - smoothVel) * 0.15;
+    const tilt = Math.max(-0.35, Math.min(0.35, smoothVel * 0.006));
+    const stretch = 1 + Math.min(0.6, Math.abs(smoothVel) * 0.012);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    ctx.globalCompositeOperation = 'lighter';
+    const span = H + 260;
+    for (const it of items) {
+      const L = LAYERS[it.li], img = bake[it.li];
+      // falls DOWN as you scroll down, endlessly wrapping
+      let y = (it.y * span + sy * L.speed + Math.sin(now / 2400 + it.ph) * 6) % span;
+      if (y < 0) y += span;
+      y -= 130;
+      const x = it.x * (W + 120) - 60 + Math.sin(now / 3100 + it.ph) * 4;
+      // neon flicker: occasional stutter, rare blackout
+      if (now > it.next) { it.flick = now + 60 + Math.random() * 260; it.next = now + 2500 + Math.random() * 12000; }
+      let a = L.alpha;
+      if (now < it.flick) a *= (Math.floor(now / 45) % 2) ? 0.15 : 0.85;
+      a *= 0.92 + Math.sin(now / 90 + it.ph) * 0.04; // mains hum
+      ctx.globalAlpha = a;
+      const w = it.w, h = w * AR;
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(it.rot + tilt * (0.5 + it.li * 0.4) + now * it.spin * 0.05);
+      ctx.scale(1, it.li === 2 ? stretch : 1 + (stretch - 1) * 0.5);
+      ctx.drawImage(img, -w / 2 - 20 * (w / (L.w[1])), -h / 2 - 20 * (w / (L.w[1])), (img.width / dpr) * (w / L.w[1]), (img.height / dpr) * (w / L.w[1]));
+      ctx.restore();
+    }
+    ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
+  }
+  build();
+  let rt; addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(build, 200); });
+  if (!reduce) requestAnimationFrame(frame); else sprite.onload = () => { bakeSprites(); frame(performance.now()); };
+})();
+
 /* ================= BOOT ================= */
 function layout() { buildRope(); }
 let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(layout, 150); });
