@@ -646,8 +646,7 @@ let rz; addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(lay
   // the sign strikes itself on when the page opens
   setTimeout(() => {
     let allowed = false;
-    const touchDevice = matchMedia('(pointer: coarse)').matches;
-    try { if (!touchDevice && audio() && AC.state === 'running') allowed = true; } catch (e) {}
+    try { if (audio() && AC.state === 'running') allowed = true; } catch (e) {}
     if (allowed) heardIgnite = true;
     power(true, allowed);
   }, 450);
