@@ -237,66 +237,66 @@ const MENU = [
   ]},
   { id: 'pizza', tab: 'Pizzas', title: 'Specialty Pizzas', sub: 'Every specialty, three sizes. Cauliflower crust available on mediums.', sizes: true, img: P + 'meat-lovers.jpg', cap: 'Meat Lovers', items: [
     { n: 'Meat Lovers', d: 'Ham, sausage, beef, pepperoni and mozzarella.', p: SPEC, img: P + 'meat-lovers.jpg', cap: 'Meat Lovers' },
-    { n: 'The Works', d: 'Pepperoni, Italian sausage, beef, onions, bell peppers, mushrooms, black olives, banana peppers, mozzarella.', p: SPEC },
-    { n: 'Hawaiian Delight', d: 'Ham, pineapple, bacon and mozzarella.', p: SPEC },
-    { n: 'Bacon Cheeseburger', d: 'Bacon, shredded cheese, beef, ketchup, mustard and pickle.', p: SPEC },
-    { n: 'White Pizza', d: 'Housemade Alfredo, grilled chicken, mushrooms, bacon and mozzarella.', p: SPEC },
-    { n: 'BBQ Chicken', d: 'Grilled chicken, mozzarella, chopped red onion and BBQ sauce.', p: SPEC },
-    { n: 'Buffalo Chicken', d: 'Grilled chicken, onions, cheddar and housemade buffalo sauce.', p: SPEC },
-    { n: 'Taco Pizza', d: 'Seasoned beef, shredded cheese, lettuce, tomato, black olives — salsa & sour cream on the side.', p: SPEC },
-    { n: 'Vegetarian', d: 'Bell peppers, onions, mushrooms, black olives, tomatoes and mozzarella.', p: SPEC },
-    { n: 'Build Your Own', d: 'Cheese pizza + your toppings: pepperoni, beef, Italian sausage, bacon, ham, onion, banana peppers, mushrooms, olives, pineapple, bell peppers, jalapeños.', p: ['7.49', '9.49', '10.49'], img: P + 'pizza-togo.jpg', cap: 'Carry-out ready' }
+    { n: 'The Works', d: 'Pepperoni, Italian sausage, beef, onions, bell peppers, mushrooms, black olives, banana peppers, mozzarella.', p: SPEC, img: P + 'menu/the-works.webp', cap: 'The Works' },
+    { n: 'Hawaiian Delight', d: 'Ham, pineapple, bacon and mozzarella.', p: SPEC, img: P + 'menu/hawaiian.webp', cap: 'Hawaiian Delight' },
+    { n: 'Bacon Cheeseburger', d: 'Bacon, shredded cheese, beef, ketchup, mustard and pickle.', p: SPEC, img: P + 'menu/bacon-cheeseburger-pizza.webp', cap: 'Bacon Cheeseburger' },
+    { n: 'White Pizza', d: 'Housemade Alfredo, grilled chicken, mushrooms, bacon and mozzarella.', p: SPEC, img: P + 'menu/white-pizza.webp', cap: 'White Pizza' },
+    { n: 'BBQ Chicken', d: 'Grilled chicken, mozzarella, chopped red onion and BBQ sauce.', p: SPEC, img: P + 'menu/bbq-chicken-pizza.webp', cap: 'BBQ Chicken' },
+    { n: 'Buffalo Chicken', d: 'Grilled chicken, onions, cheddar and housemade buffalo sauce.', p: SPEC, img: P + 'menu/buffalo-chicken-pizza.webp', cap: 'Buffalo Chicken' },
+    { n: 'Taco Pizza', d: 'Seasoned beef, shredded cheese, lettuce, tomato, black olives — salsa & sour cream on the side.', p: SPEC, img: P + 'menu/taco-pizza.webp', cap: 'Taco Pizza' },
+    { n: 'Vegetarian', d: 'Bell peppers, onions, mushrooms, black olives, tomatoes and mozzarella.', p: SPEC, img: P + 'menu/vegetarian-pizza.webp', cap: 'Vegetarian' },
+    { n: 'Build Your Own', d: 'Cheese pizza + your toppings: pepperoni, beef, Italian sausage, bacon, ham, onion, banana peppers, mushrooms, olives, pineapple, bell peppers, jalapeños.', p: ['7.49', '9.49', '10.49'], img: P + 'menu/cheese-pizza-pull.webp', cap: 'Build Your Own' }
   ]},
   { id: 'start', tab: 'Starters', title: 'Starters', sub: 'Made to share. Or not.', img: P + 'mozzi-bread.jpg', cap: 'Mozzi Bread', items: [
     { n: 'Mozzi Bread', d: 'The cheesy legend — order it every time.', p: '8.99', img: P + 'mozzi-bread.jpg', cap: 'Mozzi Bread' },
-    { n: 'Batter-Fried Mushrooms', d: 'Golden and about the size of baseballs.', p: '9.49' },
-    { n: 'Spinach & Artichoke Dip', d: 'Hot, creamy, scoopable.', p: '9.49' },
+    { n: 'Batter-Fried Mushrooms', d: 'Golden and about the size of baseballs.', p: '9.49', img: P + 'menu/fried-mushrooms.webp', cap: 'Batter-Fried Mushrooms' },
+    { n: 'Spinach & Artichoke Dip', d: 'Hot, creamy, scoopable.', p: '9.49', img: P + 'menu/spinach-dip.webp', cap: 'Spinach & Artichoke Dip' },
     { n: 'Fried Pickles or Pepperoncini Rings', d: 'Crispy, tangy, with dipping sauce.', p: '7.49', img: P + 'fried-pepperoncini.jpg', cap: 'Fried Pepperoncini' },
-    { n: 'Breadsticks', d: 'Warm, buttery, with house sauce.', p: '7.49' },
-    { n: 'Hawg Skins', d: 'Super puffy, super crispy.', p: '8.49' },
-    { n: 'Totchos', d: 'Tater tots loaded nacho-style.', p: '9.99' },
-    { n: 'Meatballs', d: 'Homemade with a little red-pepper kick.', p: '9.99' }
+    { n: 'Breadsticks', d: 'Warm, buttery, with house sauce.', p: '7.49', img: P + 'menu/breadsticks.webp', cap: 'Breadsticks' },
+    { n: 'Hawg Skins', d: 'Super puffy, super crispy.', p: '8.49', img: P + 'menu/hawg-skins.webp', cap: 'Hawg Skins' },
+    { n: 'Totchos', d: 'Tater tots loaded nacho-style.', p: '9.99', img: P + 'menu/totchos.webp', cap: 'Totchos' },
+    { n: 'Meatballs', d: 'Homemade with a little red-pepper kick.', p: '9.99', img: P + 'menu/meatballs.webp', cap: 'Meatballs' }
   ]},
-  { id: 'wings', tab: 'Wings', title: 'Wings by the Pound', sub: 'Bone-in or boneless, tossed in your sauce.', heat: true, img: P + 'interior.jpg', cap: 'Game day at Stellian\'s', items: [
-    { n: 'Bone-In · 1 lb', d: 'Classic wings, one sauce.', p: '11.99' },
-    { n: 'Bone-In · 2 lb', d: 'Two sauces, double the napkins.', p: '21.99' },
-    { n: 'Boneless · 1 lb', d: 'All meat, no work.', p: '12.59' },
-    { n: 'Boneless · 2 lb', d: 'Feeds the table.', p: '22.59' }
+  { id: 'wings', tab: 'Wings', title: 'Wings by the Pound', sub: 'Bone-in or boneless, tossed in your sauce.', heat: true, img: P + 'menu/wings-bone-in.webp', cap: 'Bone-In · 1 lb', items: [
+    { n: 'Bone-In · 1 lb', d: 'Classic wings, one sauce.', p: '11.99', img: P + 'menu/wings-bone-in.webp', cap: 'Bone-In · 1 lb' },
+    { n: 'Bone-In · 2 lb', d: 'Two sauces, double the napkins.', p: '21.99', img: P + 'menu/wings-bone-in.webp', cap: 'Bone-In · 2 lb' },
+    { n: 'Boneless · 1 lb', d: 'All meat, no work.', p: '12.59', img: P + 'menu/wings-boneless.webp', cap: 'Boneless · 1 lb' },
+    { n: 'Boneless · 2 lb', d: 'Feeds the table.', p: '22.59', img: P + 'menu/wings-boneless.webp', cap: 'Boneless · 2 lb' }
   ]},
-  { id: 'pasta', tab: 'Pasta & Salads', title: 'Pasta & Salads', sub: 'Italian comfort, Kentucky portions.', img: P + 'interior.jpg', cap: 'Pull up a chair', items: [
-    { n: 'Chicken Pasta Alfredo', d: 'Housemade Alfredo, grilled chicken.', p: '12.99' },
-    { n: 'Spaghetti & Meatballs', d: 'Homemade meatballs, red sauce.', p: '11.99' },
-    { n: 'Baked Lasagna', d: 'Layered, baked, bubbling.', p: '11.49' },
-    { n: 'Calzone', d: '$1 per extra topping.', p: '9.99' },
-    { n: 'Jumbo Ravioli', d: 'Big pillows, big sauce.', p: '10.99' },
-    { n: 'Chicken Salad', d: 'Grilled or fried chicken on greens, tomatoes, green peppers, onions, cheddar.', p: '11.49' },
-    { n: 'Clubhouse Salad', d: 'Ham, turkey, bacon, onions, bell & banana peppers, tomatoes, black olives, mushrooms.', p: '11.49' },
-    { n: 'Side Salad', d: 'Dressings: Stellian\'s House poppy-seed vinaigrette, Ranch, Honey Mustard, Bleu Cheese, Thousand Island, Italian, French.', p: '3.49' }
+  { id: 'pasta', tab: 'Pasta & Salads', title: 'Pasta & Salads', sub: 'Italian comfort, Kentucky portions.', img: P + 'menu/chicken-alfredo.webp', cap: 'Chicken Pasta Alfredo', items: [
+    { n: 'Chicken Pasta Alfredo', d: 'Housemade Alfredo, grilled chicken.', p: '12.99', img: P + 'menu/chicken-alfredo.webp', cap: 'Chicken Pasta Alfredo' },
+    { n: 'Spaghetti & Meatballs', d: 'Homemade meatballs, red sauce.', p: '11.99', img: P + 'menu/spaghetti-meatballs.webp', cap: 'Spaghetti & Meatballs' },
+    { n: 'Baked Lasagna', d: 'Layered, baked, bubbling.', p: '11.49', img: P + 'menu/lasagna.webp', cap: 'Baked Lasagna' },
+    { n: 'Calzone', d: '$1 per extra topping.', p: '9.99', img: P + 'menu/calzone.webp', cap: 'Calzone' },
+    { n: 'Jumbo Ravioli', d: 'Big pillows, big sauce.', p: '10.99', img: P + 'menu/ravioli.webp', cap: 'Jumbo Ravioli' },
+    { n: 'Chicken Salad', d: 'Grilled or fried chicken on greens, tomatoes, green peppers, onions, cheddar.', p: '11.49', img: P + 'menu/chicken-salad.webp', cap: 'Chicken Salad' },
+    { n: 'Clubhouse Salad', d: 'Ham, turkey, bacon, onions, bell & banana peppers, tomatoes, black olives, mushrooms.', p: '11.49', img: P + 'menu/clubhouse-salad.webp', cap: 'Clubhouse Salad' },
+    { n: 'Side Salad', d: 'Dressings: Stellian\'s House poppy-seed vinaigrette, Ranch, Honey Mustard, Bleu Cheese, Thousand Island, Italian, French.', p: '3.49', img: P + 'menu/side-salad.webp', cap: 'Side Salad' }
   ]},
-  { id: 'sand', tab: 'Sandwiches', title: 'Sandwich Combos', sub: 'All sandwiches and baskets served with fries.', img: P + 'storefront.jpg', cap: '116 E Broad St', items: [
-    { n: 'Italian Stellian', d: 'Italian beef, mozzarella, roasted bell peppers & onions, au jus.', p: '11.99' },
-    { n: 'Meatball Grinder', d: 'Meatballs in spaghetti sauce with mozzarella.', p: '11.99' },
-    { n: 'Chicken Parmesan', d: 'Two breaded tenders, house pizza sauce, melted provolone.', p: '11.99' },
-    { n: 'Italian Combo', d: 'Sausage, ham, pepperoni, onion, mozzarella, bell pepper, Italian dressing.', p: '11.49' },
-    { n: 'Stromboli', d: 'House pizza sauce, sausage, pepperoni, cheese, bell pepper, onion.', p: '11.49' },
-    { n: 'The Stellian Club', d: 'Hot ham, turkey, bacon, lettuce, tomato, cheddar, mayo.', p: '10.99' },
-    { n: 'Turkey Grinder', d: 'Turkey, bacon, lettuce, tomato, mozzarella, mayo.', p: '10.99' },
-    { n: 'Hamburger Basket', d: 'Lettuce, tomato, pickle & onion. Add cheese.', p: '10.49' },
-    { n: 'Pizza Burger Basket', d: 'Pepperoni, mozzarella and house pizza sauce.', p: '10.49' }
+  { id: 'sand', tab: 'Sandwiches', title: 'Sandwich Combos', sub: 'All sandwiches and baskets served with fries.', img: P + 'menu/italian-beef.webp', cap: 'Italian Stellian', items: [
+    { n: 'Italian Stellian', d: 'Italian beef, mozzarella, roasted bell peppers & onions, au jus.', p: '11.99', img: P + 'menu/italian-beef.webp', cap: 'Italian Stellian' },
+    { n: 'Meatball Grinder', d: 'Meatballs in spaghetti sauce with mozzarella.', p: '11.99', img: P + 'menu/meatball-grinder.webp', cap: 'Meatball Grinder' },
+    { n: 'Chicken Parmesan', d: 'Two breaded tenders, house pizza sauce, melted provolone.', p: '11.99', img: P + 'menu/chicken-parm-sandwich.webp', cap: 'Chicken Parmesan' },
+    { n: 'Italian Combo', d: 'Sausage, ham, pepperoni, onion, mozzarella, bell pepper, Italian dressing.', p: '11.49', img: P + 'menu/italian-combo.webp', cap: 'Italian Combo' },
+    { n: 'Stromboli', d: 'House pizza sauce, sausage, pepperoni, cheese, bell pepper, onion.', p: '11.49', img: P + 'menu/stromboli.webp', cap: 'Stromboli' },
+    { n: 'The Stellian Club', d: 'Hot ham, turkey, bacon, lettuce, tomato, cheddar, mayo.', p: '10.99', img: P + 'menu/club-sandwich.webp', cap: 'The Stellian Club' },
+    { n: 'Turkey Grinder', d: 'Turkey, bacon, lettuce, tomato, mozzarella, mayo.', p: '10.99', img: P + 'menu/turkey-grinder.webp', cap: 'Turkey Grinder' },
+    { n: 'Hamburger Basket', d: 'Lettuce, tomato, pickle & onion. Add cheese.', p: '10.49', img: P + 'menu/hamburger-basket.webp', cap: 'Hamburger Basket' },
+    { n: 'Pizza Burger Basket', d: 'Pepperoni, mozzarella and house pizza sauce.', p: '10.49', img: P + 'menu/pizza-burger.webp', cap: 'Pizza Burger Basket' }
   ]},
   { id: 'shake', tab: 'Freak Shakes', title: 'Freak Shakes & Monster Sundaes', sub: 'Over-the-top, hand-built, made for the camera.', img: P + 'shake-strawberry-cheesecake.jpg', cap: 'Strawberry Cheesecake', items: [
     { n: 'Strawberry Cheesecake', d: 'Whipped cream mountain, graham rim, strawberry drizzle.', p: '9.99', img: P + 'shake-strawberry-cheesecake.jpg', cap: 'Strawberry Cheesecake' },
     { n: 'Chocolate Overload', d: 'Chocolate on chocolate on chocolate.', p: '9.99', img: P + 'shakes-chocolate.jpg', cap: 'Chocolate Overload' },
     { n: "Peanut Butter S'more", d: 'Peanut butter, graham, toasted marshmallow vibes.', p: '9.99', img: P + 'shakes-chocolate.jpg', cap: "PB S'more" },
-    { n: 'Cookies-n-Cream', d: 'Cookie crumble everything.', p: '9.99' },
+    { n: 'Cookies-n-Cream', d: 'Cookie crumble everything.', p: '9.99', img: P + 'menu/cookies-n-cream.webp', cap: 'Cookies-n-Cream' },
     { n: 'Seasonal Shake', d: 'Ask your server what\'s loaded on top this season.', p: '9.99', img: P + 'shake-sprinkles.jpg', cap: 'Seasonal special' },
-    { n: 'Chocolate Sundae', d: 'Monster-sized.', p: '11' },
-    { n: 'Strawberry Sundae', d: 'Monster-sized.', p: '11' }
+    { n: 'Chocolate Sundae', d: 'Monster-sized.', p: '11', img: P + 'menu/chocolate-sundae.webp', cap: 'Chocolate Sundae' },
+    { n: 'Strawberry Sundae', d: 'Monster-sized.', p: '11', img: P + 'menu/strawberry-sundae.webp', cap: 'Strawberry Sundae' }
   ]},
-  { id: 'kids', tab: 'Kids', title: 'Kids Menu', sub: 'For kids 10 and under.', img: P + 'pizza-togo.jpg', cap: 'Little cheese pizza', items: [
-    { n: "Child's Cheese Pizza", d: 'Extra toppings available.', p: 'ASK' },
-    { n: 'Chicken Tender Basket', d: 'One tender and fries.', p: '4.99' },
-    { n: "Child's Spaghetti", d: 'Just like the grown-up one.', p: '4.99' }
+  { id: 'kids', tab: 'Kids', title: 'Kids Menu', sub: 'For kids 10 and under.', img: P + 'menu/kids-cheese-pizza.webp', cap: 'Child\'s Cheese Pizza', items: [
+    { n: "Child's Cheese Pizza", d: 'Extra toppings available.', p: 'ASK', img: P + 'menu/kids-cheese-pizza.webp', cap: 'Child\'s Cheese Pizza' },
+    { n: 'Chicken Tender Basket', d: 'One tender and fries.', p: '4.99', img: P + 'menu/chicken-tenders.webp', cap: 'Chicken Tender Basket' },
+    { n: "Child's Spaghetti", d: 'Just like the grown-up one.', p: '4.99', img: P + 'menu/kids-spaghetti.webp', cap: 'Child\'s Spaghetti' }
   ]}
 ];
 const SAUCES = [['House Sauce', 1], ['Sweet BBQ', 1], ['Honey BBQ', 1], ['Caribbean Jerk', 2], ['Sweet Heat', 2], ['Buffalo', 3], ['Mango Habanero', 4], ['Extra Hot Buffalo', 4], ['Ghost Pepper', 5]];
@@ -310,9 +310,10 @@ MENU.forEach((c, i) => {
 });
 const price = p => Array.isArray(p) ? `<span class="pr multi">${p.map(x => `<span class="pbox">${x}</span>`).join('')}</span>` : `<span class="pr"><span class="pbox">${p}</span></span>`;
 function renderCat(c) {
+  c.items.forEach(it => { if (it.img) { const im = new Image(); im.src = it.img; } });
   list.innerHTML = `<h3 class="cat-title">${c.title}</h3><p class="cat-sub">${c.sub}</p>` +
     (c.sizes ? `<div class="size-row"><span>SMALL</span>·<span>MEDIUM</span>·<span>LARGE</span></div>` : '') +
-    `<ul class="items">${c.items.map((it, k) => `<li class="item" data-k="${k}"><span class="nm">${it.n}${it.img ? '<i class="cam">PHOTO</i>' : ''}</span><span class="ds">${it.d}</span>${price(it.p)}</li>`).join('')}</ul>`;
+    `<ul class="items">${c.items.map((it, k) => `<li class="item" data-k="${k}"><span class="th"><img src="${it.img}" alt="${it.n.replace(/"/g, '&quot;')}" loading="lazy" decoding="async"></span><span class="nm">${it.n}</span><span class="ds">${it.d}</span>${price(it.p)}</li>`).join('')}</ul>`;
   extra.innerHTML = c.heat ? `<p class="cat-sub" style="margin:0">Sauces · mild → wild</p><div class="heat">${SAUCES.map(([s, h]) => `<div><span>${s}</span><b style="width:${h * 20}%"></b></div>`).join('')}</div>` : '';
   showPhoto(c.img, c.cap, true);
   $$('.item', list).forEach(li => {
